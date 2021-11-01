@@ -7,3 +7,5 @@ I thought it would be really cool to have an app where employees could switch sh
 After experimenting with multiple programs and frameworks, I came across Flutter, a cross-platform mobile development framework, using the Dart programming language. The framework also utilized tools like Android Studio, Visual Studio Code, and Xcode. I also used Firebase as a backend data storage system.
 
 I worked on the app for most of the summer of 2018, and finally published it to the Google Play Store on November 27, 2018. I later published the app on the Apple App Store in early 2019 (though it is only available through TestFlight).
+
+Please explore the lib folder to see my code!
