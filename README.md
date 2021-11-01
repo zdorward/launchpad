@@ -8,4 +8,4 @@ After experimenting with multiple programs and frameworks, I came across Flutter
 
 I worked on the app for most of the summer of 2018, and finally published it to the Google Play Store on November 27, 2018. I later published the app on the Apple App Store in early 2019 (though it is only available through TestFlight).
 
-Please explore the lib folder to see my code!
+Please explore the my code in the lib folder!
