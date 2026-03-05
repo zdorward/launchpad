@@ -92,14 +92,16 @@ class _LoginPageState extends State<LoginPage> {
     return TextButton(
       style: TextButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        backgroundColor: Colors.black.withValues(alpha: 0.2),
+        backgroundColor: Colors.black.withValues(alpha: 0.5),
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       ),
       onPressed: () {
         Navigator.pushNamed(context, '/create_account');
       },
       child: const Text(
         'Create Account',
-        style: TextStyle(color: Colors.white, fontSize: 11.0),
+        style: TextStyle(fontSize: 14.0),
       ),
     );
   }
@@ -108,6 +110,8 @@ class _LoginPageState extends State<LoginPage> {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
       ),
       child: const Text('LOGIN'),
       onPressed: () {
@@ -137,10 +141,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 Container(
                   margin: const EdgeInsets.only(bottom: 25.0),
-                  child: SizedBox(
-                    height: 25.0,
-                    child: _createAccountButton(),
-                  ),
+                  child: _createAccountButton(),
                 ),
                 _loginButton(model),
               ],
