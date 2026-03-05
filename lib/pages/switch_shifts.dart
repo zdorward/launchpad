@@ -9,7 +9,7 @@ import '../scoped-models/main.dart';
 
 class SwitchShiftsPage extends StatefulWidget {
   final MainModel model;
-  SwitchShiftsPage(this.model);
+  const SwitchShiftsPage(this.model, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -26,9 +26,9 @@ class _SwitchShiftsPageState extends State<SwitchShiftsPage> {
 
   Widget _updateTab(int index, MainModel model) {
     if (index == 0) {
-      return TradeShiftsTab();
+      return const TradeShiftsTab();
     } else if (index == 1) {
-      return PendingRequestsTab();
+      return const PendingRequestsTab();
     } else if (index == 2) {
       return PersonalShiftLogTab(widget.model);
     } else {
@@ -41,7 +41,7 @@ class _SwitchShiftsPageState extends State<SwitchShiftsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _updateTab(_currentIndex, widget.model),
-      appBar: AppBar(title: Text('Change Shifts')),
+      appBar: AppBar(title: const Text('Change Shifts')),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (int index) {
@@ -49,7 +49,7 @@ class _SwitchShiftsPageState extends State<SwitchShiftsPage> {
               _currentIndex = index;
             });
           },
-          items: [
+          items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.swap_horiz), label: 'Trade'),
             BottomNavigationBarItem(

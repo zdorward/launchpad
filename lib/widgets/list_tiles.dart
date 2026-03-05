@@ -4,57 +4,67 @@ import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
 
 class AnnouncementsPageListTile extends StatelessWidget {
+  const AnnouncementsPageListTile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.announcement),
-      title: Text('Announcements'),
+      leading: const Icon(Icons.announcement),
+      title: const Text('Announcements'),
       onTap: () => Navigator.pushReplacementNamed(context, '/announcements'),
     );
   }
 }
 
 class RequestShiftChangeListTile extends StatelessWidget {
+  const RequestShiftChangeListTile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.swap_vert),
-      title: Text('Change Shifts'),
+      leading: const Icon(Icons.swap_vert),
+      title: const Text('Change Shifts'),
       onTap: () => Navigator.pushReplacementNamed(context, '/change_shifts'),
     );
   }
 }
 
 class CreateScheduleListTile extends StatelessWidget {
+  const CreateScheduleListTile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.create),
-      title: Text('Create Schedule'),
+      leading: const Icon(Icons.create),
+      title: const Text('Create Schedule'),
       onTap: () => Navigator.pushReplacementNamed(context, '/select_day'),
     );
   }
 }
 
 class ScheduleListTile extends StatelessWidget {
+  const ScheduleListTile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.calendar_today),
-      title: Text('Schedule'),
+      leading: const Icon(Icons.calendar_today),
+      title: const Text('Schedule'),
       onTap: () => Navigator.pushReplacementNamed(context, '/schedule'),
     );
   }
 }
 
 class ManagerConsoleListTile extends StatelessWidget {
+  const ManagerConsoleListTile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget? child, MainModel model) {
         return ListTile(
-          leading: Icon(Icons.offline_bolt),
-          title: Text('Manager Console'),
+          leading: const Icon(Icons.offline_bolt),
+          title: const Text('Manager Console'),
           onTap: () {
             Navigator.pushReplacementNamed(context, '/manager_console');
           },
@@ -65,13 +75,15 @@ class ManagerConsoleListTile extends StatelessWidget {
 }
 
 class PromotionsListTile extends StatelessWidget {
+  const PromotionsListTile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget? child, MainModel model) {
         return ListTile(
-          leading: Icon(Icons.label_important),
-          title: Text('Promotions'),
+          leading: const Icon(Icons.label_important),
+          title: const Text('Promotions'),
           onTap: () {
             Navigator.pushReplacementNamed(context, '/promotions');
 
@@ -83,22 +95,26 @@ class PromotionsListTile extends StatelessWidget {
 }
 
 class AccountListTile extends StatelessWidget {
+  const AccountListTile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.person),
-      title: Text('Account'),
+      leading: const Icon(Icons.person),
+      title: const Text('Account'),
       onTap: () => Navigator.pushReplacementNamed(context, '/account'),
     );
   }
 }
 
 class ShiftPoolListTile extends StatelessWidget {
+  const ShiftPoolListTile({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(Icons.people),
-      title: Text('Shift Pool'),
+      leading: const Icon(Icons.people),
+      title: const Text('Shift Pool'),
       onTap: () => Navigator.pushReplacementNamed(context, '/pool'),
     );
   }

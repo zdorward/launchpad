@@ -5,8 +5,10 @@ import '../scoped-models/main.dart';
 import '../widgets/error.dart';
 
 class PendingRequestsTab extends StatefulWidget {
+  const PendingRequestsTab({super.key});
+
   @override
-  _PendingRequestsTabState createState() => _PendingRequestsTabState();
+  State<PendingRequestsTab> createState() => _PendingRequestsTabState();
 }
 
 class _PendingRequestsTabState extends State<PendingRequestsTab> {
@@ -24,29 +26,28 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   ElevatedButton(
-                    child: Text('Decline'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red.withOpacity(0.9),
+                      backgroundColor: Colors.red.withValues(alpha: 0.9),
                     ),
                     onPressed: () {
                       model.isLoading = true;
                       model.deleteRequest(index).then((bool success) {
                         model.isLoading = false;
-                        if (!success) {
+                        if (!success && mounted) {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
-                                return ShowErrorDialogue();
+                                return const ShowErrorDialogue();
                               });
                         }
                       });
                     },
+                    child: const Text('Decline'),
                   ),
-                  SizedBox(width: 10.0),
+                  const SizedBox(width: 10.0),
                   ElevatedButton(
-                    child: Text('Accept'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green.withOpacity(0.9),
+                      backgroundColor: Colors.green.withValues(alpha: 0.9),
                     ),
                     onPressed: () {
                       DateTime date =
@@ -57,8 +58,8 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Error'),
-                                content: Text(
+                                title: const Text('Error'),
+                                content: const Text(
                                     'It looks like the data in this request is no longer valid. Press "Okay" to delete this request.'),
                                 actions: <Widget>[
                                   TextButton(
@@ -66,7 +67,7 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
                                       model.deleteRequest(index);
                                       Navigator.pop(context);
                                     },
-                                    child: Text('Okay'),
+                                    child: const Text('Okay'),
                                   )
                                 ],
                               );
@@ -75,11 +76,12 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
                         model
                             .tradeShifts(date, employeeName)
                             .then((bool success) {
+                          if (!mounted) return;
                           if (!success) {
                             showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return ShowErrorDialogue();
+                                  return const ShowErrorDialogue();
                                 });
                           } else {
                             String dateString =
@@ -91,11 +93,12 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
                         });
                       }
                     },
+                    child: const Text('Accept'),
                   )
                 ],
               ),
             ),
-            Divider()
+            const Divider()
           ],
         );
       },
@@ -144,17 +147,17 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Center(
+          const Center(
             child: Text('No shift requests found'),
           ),
           IconButton(
-              icon: Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh),
               onPressed: () => model.updateUser(model.userIndex)),
         ],
       );
 
       if (model.isLoading) {
-        content = Container(child: Center(child: CircularProgressIndicator()));
+        content = const Center(child: CircularProgressIndicator());
       } else if (requests.isNotEmpty) {
         content = listRequests(model, requests);
       }

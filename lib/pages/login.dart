@@ -8,7 +8,7 @@ import '../widgets/error.dart';
 class LoginPage extends StatefulWidget {
   final MainModel model;
 
-  LoginPage(this.model);
+  const LoginPage(this.model, {super.key});
   @override
   State<StatefulWidget> createState() {
     return _LoginPageState();
@@ -18,20 +18,19 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   initState() {
+    super.initState();
     widget.model.fetchEmployees().then((bool success) {
-      if (!success) {
+      if (!success && mounted) {
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ShowErrorDialogue();
+              return const ShowErrorDialogue();
             });
       }
     });
-
-    super.initState();
   }
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   int index = -1;
   bool login = true;
@@ -61,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
       decoration: InputDecoration(
         labelText: 'Employee ID',
         filled: true,
-        fillColor: Colors.white.withOpacity(0.9),
+        fillColor: Colors.white.withValues(alpha: 0.9),
       ),
     );
   }
@@ -84,7 +83,7 @@ class _LoginPageState extends State<LoginPage> {
       decoration: InputDecoration(
         labelText: 'PIN',
         filled: true,
-        fillColor: Colors.white.withOpacity(0.9),
+        fillColor: Colors.white.withValues(alpha: 0.9),
       ),
     );
   }
@@ -93,12 +92,12 @@ class _LoginPageState extends State<LoginPage> {
     return TextButton(
       style: TextButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-        backgroundColor: Colors.black.withOpacity(0.2),
+        backgroundColor: Colors.black.withValues(alpha: 0.2),
       ),
       onPressed: () {
         Navigator.pushNamed(context, '/create_account');
       },
-      child: Text(
+      child: const Text(
         'Create Account',
         style: TextStyle(color: Colors.white, fontSize: 11.0),
       ),
@@ -110,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
       style: ElevatedButton.styleFrom(
         backgroundColor: Theme.of(context).primaryColor,
       ),
-      child: Text('LOGIN'),
+      child: const Text('LOGIN'),
       onPressed: () {
         if (!(_formKey.currentState?.validate() ?? false)) {
           return;
@@ -133,11 +132,11 @@ class _LoginPageState extends State<LoginPage> {
               children: <Widget>[
                 _idTextFormField(model),
                 Container(
-                  margin: EdgeInsets.only(top: 10.0, bottom: 15.0),
+                  margin: const EdgeInsets.only(top: 10.0, bottom: 15.0),
                   child: _pinTextFormField(model),
                 ),
                 Container(
-                  margin: EdgeInsets.only(bottom: 25.0),
+                  margin: const EdgeInsets.only(bottom: 25.0),
                   child: SizedBox(
                     height: 25.0,
                     child: _createAccountButton(),
@@ -154,7 +153,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Login',
         ),
       ),
@@ -162,12 +161,12 @@ class _LoginPageState extends State<LoginPage> {
         decoration: BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover,
-            image: AssetImage('assets/neon.jpeg'),
+            image: const AssetImage('assets/neon.jpeg'),
             colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.75), BlendMode.dstATop),
+                Colors.black.withValues(alpha: 0.75), BlendMode.dstATop),
           ),
         ),
-        padding: EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(10.0),
         child: Center(
           child: SingleChildScrollView(
             child: centeredColumn(),

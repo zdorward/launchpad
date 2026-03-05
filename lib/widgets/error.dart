@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 class ShowErrorDialogue extends StatelessWidget {
+  const ShowErrorDialogue({super.key});
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Network Error'),
+      title: const Text('Network Error'),
       content:
-          Text('Please contact a manager and let them know what went wrong'),
+          const Text('Please contact a manager and let them know what went wrong'),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pushReplacementNamed(context, '/'),
-          child: Text('Okay'),
+          child: const Text('Okay'),
         )
       ],
     );

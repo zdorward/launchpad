@@ -6,14 +6,16 @@ import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
 
 class SelectDayPage extends StatefulWidget {
+  const SelectDayPage({super.key});
+
   @override
   State<StatefulWidget> createState() => _SelectDayPageState();
 }
 
 class _SelectDayPageState extends State<SelectDayPage> {
-  DateTime _firstDate = DateTime.now().subtract(Duration( days: 7));
+  final DateTime _firstDate = DateTime.now().subtract(const Duration( days: 7));
   DateTime _date = DateTime.now();
-  DateTime limit = DateTime.now().add(Duration(days: 100));
+  DateTime limit = DateTime.now().add(const Duration(days: 100));
 
   Future<void> _selectDate(BuildContext context, MainModel model) async {
     final DateTime? picked = await showDatePicker(
@@ -26,7 +28,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
       setState(() {
         _date = picked;
 
-        model.setDate(picked.add(Duration(hours: 2)));
+        model.setDate(picked.add(const Duration(hours: 2)));
       });
     }
   }
@@ -43,11 +45,11 @@ class _SelectDayPageState extends State<SelectDayPage> {
         builder: (BuildContext context, Widget? child, MainModel model) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Date Selection'),
+          title: const Text('Date Selection'),
         ),
         drawer: _buildDrawer(context, model),
         body: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.cover,
               image: AssetImage('assets/background.png'),
@@ -62,35 +64,35 @@ class _SelectDayPageState extends State<SelectDayPage> {
                   children: <Widget>[
                     Center(
                       child: ElevatedButton(
-                        child: Text('Select Date'),
+                        child: const Text('Select Date'),
                         onPressed: () {
                           _selectDate(context, model);
                         },
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10.0,
                     ),
                     Container(
-                      padding: EdgeInsets.all(5.0),
-                      child: Text(
-                        'Date selected: ${_date.day.toString()}/${_date.month.toString()}/${_date.year.toString()}',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                        ),
-                      ),
+                      padding: const EdgeInsets.all(5.0),
                       decoration: BoxDecoration(
                         border: Border.all(),
                         borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: Text(
+                        'Date selected: ${_date.day.toString()}/${_date.month.toString()}/${_date.year.toString()}',
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(bottom: 50.0),
+                margin: const EdgeInsets.only(bottom: 50.0),
                 child: ElevatedButton(
-                  child: Text('Next'),
+                  child: const Text('Next'),
                   onPressed: () {
                     bool access = true;
 
@@ -115,12 +117,12 @@ class _SelectDayPageState extends State<SelectDayPage> {
                           builder: (BuildContext context) {
                             return AlertDialog(
 
-                              title: Text('Error'),
-                              content: Text(
+                              title: const Text('Error'),
+                              content: const Text(
                                   'A schedule with days during this week has already been made.'),
                               actions: <Widget>[
                                 TextButton(
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                   onPressed: () => Navigator.pop(context),
                                 )
                               ],

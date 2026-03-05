@@ -8,24 +8,24 @@ import '../widgets/error.dart';
 
 class PromotionsPage extends StatefulWidget {
   final MainModel model;
-  PromotionsPage(this.model);
+  const PromotionsPage(this.model, {super.key});
   @override
-  _PromotionsPageState createState() => _PromotionsPageState();
+  State<PromotionsPage> createState() => _PromotionsPageState();
 }
 
 class _PromotionsPageState extends State<PromotionsPage> {
   @override
   initState() {
+    super.initState();
     widget.model.fetchPromotions().then((bool success) {
-      if (!success) {
+      if (!success && mounted) {
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ShowErrorDialogue();
+              return const ShowErrorDialogue();
             });
       }
     });
-    super.initState();
   }
 
   late Promotion promotion;
@@ -45,13 +45,11 @@ class _PromotionsPageState extends State<PromotionsPage> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('Confirm Deletion'),
-                      content: Text('Are you sure you want to delete ' +
-                          promotion.name +
-                          '?'),
+                      title: const Text('Confirm Deletion'),
+                      content: Text('Are you sure you want to delete ${promotion.name}?'),
                       actions: <Widget>[
                         TextButton(
-                          child: Text('NO'),
+                          child: const Text('NO'),
                           onPressed: () {
                             model.reinsertPromotion(
                                 promotion, model.promotions.length - index - 1);
@@ -60,13 +58,14 @@ class _PromotionsPageState extends State<PromotionsPage> {
                           },
                         ),
                         TextButton(
-                          child: Text('YES'),
+                          child: const Text('YES'),
                           onPressed: () {
                             Navigator.pop(context);
                             model
                                 .deletePromotion(
                                     model.promotions.length - index - 1)
                                 .then((bool success) {
+                              if (!mounted) return;
                               if (success) {
                               } else {
                                 model.reinsertPromotion(promotion,
@@ -74,7 +73,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                                 showDialog(
                                     context: context,
                                     builder: (BuildContext context) {
-                                      return ShowErrorDialogue();
+                                      return const ShowErrorDialogue();
                                     });
                               }
                             });
@@ -90,11 +89,11 @@ class _PromotionsPageState extends State<PromotionsPage> {
                   context: context,
                   builder: (BuildContext context) {
                     return AlertDialog(
-                      title: Text('Error'),
-                      content: Text('You do not have access to this function'),
+                      title: const Text('Error'),
+                      content: const Text('You do not have access to this function'),
                       actions: <Widget>[
                         TextButton(
-                          child: Text('OK'),
+                          child: const Text('OK'),
                           onPressed: () => Navigator.pop(context),
                         )
                       ],
@@ -117,25 +116,25 @@ class _PromotionsPageState extends State<PromotionsPage> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Description'),
+                            title: const Text('Description'),
                             content: Text(model
                                 .promotions[model.promotions.length - index - 1]
                                 .description),
                             actions: <Widget>[
                               TextButton(
-                                child: Text('OK'),
+                                child: const Text('OK'),
                                 onPressed: () => Navigator.pop(context),
                               )
                             ],
                           );
                         });
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.info,
                   ),
                 ),
               ),
-              Divider(),
+              const Divider(),
             ],
           ),
         );
@@ -148,9 +147,9 @@ class _PromotionsPageState extends State<PromotionsPage> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
         builder: (BuildContext context, Widget? child, MainModel model) {
-      Widget content = Center(child: Text('No promotions found'));
+      Widget content = const Center(child: Text('No promotions found'));
       if (model.isLoading) {
-        content = Center(child: CircularProgressIndicator());
+        content = const Center(child: CircularProgressIndicator());
       } else if (model.promotions.isNotEmpty) {
         content = listPromotions(model);
       }
@@ -159,7 +158,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
             child: Column(children: model.listTiles),
           ),
           appBar: AppBar(
-            title: Text('Promotions'),
+            title: const Text('Promotions'),
           ),
           body: RefreshIndicator(
               onRefresh: model.fetchPromotions, child: content),
@@ -172,14 +171,14 @@ class _PromotionsPageState extends State<PromotionsPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return SimpleDialog(
-                        title: Text('Add Promotion'),
+                        title: const Text('Add Promotion'),
                         children: <Widget>[
                           SimpleDialogOption(
                             child: TextField(
                               onChanged: (String value) {
                                 name = value;
                               },
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Name of Promo',
                               ),
                             ),
@@ -190,7 +189,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                               onChanged: (String value) {
                                 description = value;
                               },
-                              decoration: InputDecoration(
+                              decoration: const InputDecoration(
                                 labelText: 'Description',
                               ),
                             ),
@@ -208,7 +207,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                                       Navigator.pop(context);
                                     } else {}
                                   },
-                                  child: Text('Confirm'),
+                                  child: const Text('Confirm'),
                                 )
                               ],
                             ),
@@ -221,12 +220,12 @@ class _PromotionsPageState extends State<PromotionsPage> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
-                        title: Text('Error'),
+                        title: const Text('Error'),
                         content:
-                            Text('You do not have access to this function'),
+                            const Text('You do not have access to this function'),
                         actions: <Widget>[
                           TextButton(
-                            child: Text('OK'),
+                            child: const Text('OK'),
                             onPressed: () => Navigator.pop(context),
                           )
                         ],
@@ -235,7 +234,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
               }
             },
             tooltip: 'Add promo',
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
           ));
     });
   }

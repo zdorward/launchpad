@@ -7,8 +7,10 @@ import '../models/employee.dart';
 import '../widgets/error.dart';
 
 class ManageEmployeesTab extends StatefulWidget {
+  const ManageEmployeesTab({super.key});
+
   @override
-  _ManageEmployeesTabState createState() => _ManageEmployeesTabState();
+  State<ManageEmployeesTab> createState() => _ManageEmployeesTabState();
 }
 
 class _ManageEmployeesTabState extends State<ManageEmployeesTab> {
@@ -26,13 +28,11 @@ class _ManageEmployeesTabState extends State<ManageEmployeesTab> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Confirm Deletion'),
-                    content: Text('Are you sure you want to delete ' +
-                        employee.name +
-                        '?'),
+                    title: const Text('Confirm Deletion'),
+                    content: Text('Are you sure you want to delete ${employee.name}?'),
                     actions: <Widget>[
                       TextButton(
-                        child: Text('NO'),
+                        child: const Text('NO'),
                         onPressed: () {
                           setState(() {
                             model.reinsertEmployee(employee, index);
@@ -42,19 +42,20 @@ class _ManageEmployeesTabState extends State<ManageEmployeesTab> {
                         },
                       ),
                       TextButton(
-                        child: Text('YES'),
+                        child: const Text('YES'),
                         onPressed: () {
                           Navigator.pop(context);
                           model
                               .deleteEmployee(index, context)
                               .then((bool success) {
+                            if (!mounted) return;
                             if (success) {
                             } else {
                               model.reinsertEmployee(employee, index);
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return ShowErrorDialogue();
+                                    return const ShowErrorDialogue();
                                   });
                             }
                           });
@@ -76,7 +77,7 @@ class _ManageEmployeesTabState extends State<ManageEmployeesTab> {
                 subtitle: Text(model.employees[index].id.toString()),
 
               ),
-              Divider(),
+              const Divider(),
             ],
           ),
         );
@@ -89,9 +90,9 @@ class _ManageEmployeesTabState extends State<ManageEmployeesTab> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget? child, MainModel model) {
-        Widget content = Center(child: Text('No employees found'));
+        Widget content = const Center(child: Text('No employees found'));
         if (model.isLoading) {
-          content = Center(child: CircularProgressIndicator());
+          content = const Center(child: CircularProgressIndicator());
         } else if (model.employees.isNotEmpty) {
           content = listEmployees(model);
         }

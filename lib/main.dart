@@ -20,12 +20,14 @@ import './tabs/personal_shift_log.dart';
 
 import './scoped-models/main.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return AfterSplash();
+    return const AfterSplash();
     // return SplashScreen(
     //   seconds: 4,
     //   navigateAfterSeconds: AfterSplash(),
@@ -38,6 +40,8 @@ class MyApp extends StatelessWidget {
 }
 
 class AfterSplash extends StatelessWidget {
+  const AfterSplash({super.key});
+
   @override
   Widget build(BuildContext context) {
     final MainModel model = MainModel();
@@ -55,16 +59,16 @@ class AfterSplash extends StatelessWidget {
             )),
         routes: {
           '/': (BuildContext context) => LoginPage(model),
-          '/announcements': (BuildContext context) => AnnouncementsPage(),
-          '/create_account': (BuildContext context) => CreateAccountPage(),
+          '/announcements': (BuildContext context) => const AnnouncementsPage(),
+          '/create_account': (BuildContext context) => const CreateAccountPage(),
           '/schedule': (BuildContext context) => SchedulePage(model),
           '/change_shifts': (BuildContext context) => SwitchShiftsPage(model),
-          '/select_day': (BuildContext context) => SelectDayPage(),
-          '/create_schedule': (BuildContext context) => CreateSchedulePage(),
+          '/select_day': (BuildContext context) => const SelectDayPage(),
+          '/create_schedule': (BuildContext context) => const CreateSchedulePage(),
           '/manager_console': (BuildContext context) => ManagerConsole(model),
           '/promotions': (BuildContext context) => PromotionsPage(model),
-          '/account': (BuildContext context) => AccountPage(),
-          '/change_pin': (BuildContext context) => ChangePINPage(),
+          '/account': (BuildContext context) => const AccountPage(),
+          '/change_pin': (BuildContext context) => const ChangePINPage(),
           '/pool': (BuildContext context) => ShiftPoolPage(model),
 
           '/shift_log': (BuildContext context) => ShiftLogTab(model),

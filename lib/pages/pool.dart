@@ -9,9 +9,9 @@ import '../widgets/error.dart';
 
 class ShiftPoolPage extends StatefulWidget {
   final MainModel model;
-  ShiftPoolPage(this.model);
+  const ShiftPoolPage(this.model, {super.key});
   @override
-  _ShiftPoolPageState createState() => _ShiftPoolPageState();
+  State<ShiftPoolPage> createState() => _ShiftPoolPageState();
 }
 
 class _ShiftPoolPageState extends State<ShiftPoolPage> {
@@ -21,20 +21,20 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
 
   @override
   initState() {
-    _firstDate = DateTime.now().subtract(Duration(days: 1));
+    _firstDate = DateTime.now().subtract(const Duration(days: 1));
     _date = DateTime.now();
-    limit = _firstDate.add(Duration(days: 100));
+    limit = _firstDate.add(const Duration(days: 100));
 
+    super.initState();
     widget.model.fetchShifts().then((bool success) {
-      if (!success) {
+      if (!success && mounted) {
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ShowErrorDialogue();
+              return const ShowErrorDialogue();
             });
       }
     });
-    super.initState();
   }
 
   void showDeleteDialog(MainModel model, String name, DateTime date) {
@@ -43,18 +43,18 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Confirm Deletion'),
+            title: const Text('Confirm Deletion'),
             content: Text(
                 'Are you sure you want to remove your shift on ${model.months[date.month]} ${date.day} from the shift pool?'),
             actions: <Widget>[
               TextButton(
-                child: Text('NO'),
+                child: const Text('NO'),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               TextButton(
-                child: Text('YES'),
+                child: const Text('YES'),
                 onPressed: () {
                   model.isLoading = true;
                   Navigator.pop(context);
@@ -73,18 +73,18 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Confirm Upload'),
+            title: const Text('Confirm Upload'),
             content: Text(
                 'Are you sure you want to take $name\'s shift on ${model.months[date.month]} ${date.day}?'),
             actions: <Widget>[
               TextButton(
-                child: Text('NO'),
+                child: const Text('NO'),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
               TextButton(
-                child: Text('YES'),
+                child: const Text('YES'),
                 onPressed: () {
                   model.isLoading = true;
                   Navigator.pop(context);
@@ -110,7 +110,7 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
           children: <Widget>[
             ListTile(
               leading: Container(
-                padding: EdgeInsets.all(3.0),
+                padding: const EdgeInsets.all(3.0),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4.0),
                   color: Theme.of(context).primaryColor,
@@ -121,11 +121,11 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
                   '${model.days[date.weekday]}, ${model.months[date.month]} ${date.day}, ${date.year}'),
               subtitle: Text(shift),
               trailing: name == model.user.name
-                  ? (Icon(
+                  ? (const Icon(
                       Icons.delete,
                       color: Colors.red,
                     ))
-                  : Icon(
+                  : const Icon(
                       (Icons.check),
                       color: Colors.green,
                     ),
@@ -137,7 +137,7 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
                 }
               },
             ),
-            Divider(),
+            const Divider(),
           ],
         );
       },
@@ -167,18 +167,18 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text('Confirm Addition'),
+                title: const Text('Confirm Addition'),
                 content: Text(
                     'Are you sure you want to add your shift on ${model.months[_date.month]} ${_date.day} to the shift pool?'),
                 actions: <Widget>[
                   TextButton(
-                    child: Text('NO'),
+                    child: const Text('NO'),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
                   TextButton(
-                    child: Text('YES'),
+                    child: const Text('YES'),
                     onPressed: () {
                       String shift = model.findShift(model.user.name, picked);
                       if (shift != '' && shift != 'null') {
@@ -191,12 +191,12 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
                             context: context,
                             builder: (BuildContext context) {
                               return AlertDialog(
-                                title: Text('Error'),
-                                content: Text(
+                                title: const Text('Error'),
+                                content: const Text(
                                     'You do not work on the day you selected'),
                                 actions: <Widget>[
                                   TextButton(
-                                    child: Text('OK'),
+                                    child: const Text('OK'),
                                     onPressed: () => Navigator.pop(context),
                                   )
                                 ],
@@ -231,19 +231,19 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
           }
         }
 
-        Widget content = Center(
+        Widget content = const Center(
             child: Text('There are currently no shifts available to pick up'));
         if (model.isLoading) {
-          content = Center(child: CircularProgressIndicator());
+          content = const Center(child: CircularProgressIndicator());
         } else if (newShifts.isNotEmpty) {
           content = listShifts(model, newShifts);
         }
         return Scaffold(
-            appBar: AppBar(title: Text('Shift Pool')),
+            appBar: AppBar(title: const Text('Shift Pool')),
             drawer: _buildDrawer(context, model),
             floatingActionButton: FloatingActionButton(
               tooltip: 'Add shift',
-              child: Icon(Icons.add),
+              child: const Icon(Icons.add),
               onPressed: () {
                 if (model.user.manager) {
                 } else {

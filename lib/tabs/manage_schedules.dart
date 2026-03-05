@@ -7,8 +7,10 @@ import '../models/schedule.dart';
 import '../widgets/error.dart';
 
 class ManageSchedulesTab extends StatefulWidget {
+  const ManageSchedulesTab({super.key});
+
   @override
-  _ManageSchedulesTabState createState() => _ManageSchedulesTabState();
+  State<ManageSchedulesTab> createState() => _ManageSchedulesTabState();
 }
 
 class _ManageSchedulesTabState extends State<ManageSchedulesTab> {
@@ -42,12 +44,12 @@ class _ManageSchedulesTabState extends State<ManageSchedulesTab> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Confirm Deletion'),
+                    title: const Text('Confirm Deletion'),
                     content:
-                        Text('Are you sure you want to delete this schedule?'),
+                        const Text('Are you sure you want to delete this schedule?'),
                     actions: <Widget>[
                       TextButton(
-                        child: Text('NO'),
+                        child: const Text('NO'),
                         onPressed: () {
                           setState(() {
                             model.reinsertSchedule(schedule, index);
@@ -57,16 +59,17 @@ class _ManageSchedulesTabState extends State<ManageSchedulesTab> {
                         },
                       ),
                       TextButton(
-                        child: Text('YES'),
+                        child: const Text('YES'),
                         onPressed: () {
                           Navigator.pop(context);
                           model.deleteSchedule(index).then((bool success) {
+                            if (!mounted) return;
                             if (!success) {
                               model.reinsertSchedule(schedule, index);
                               showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
-                                    return ShowErrorDialogue();
+                                    return const ShowErrorDialogue();
                                   });
                             }
                           });
@@ -88,7 +91,7 @@ class _ManageSchedulesTabState extends State<ManageSchedulesTab> {
                 subtitle: Text(
                     '${first.month}/${first.day}/${first.year} - ${last.month}/${last.day}/${last.year}'),
               ),
-              Divider()
+              const Divider()
             ],
           ),
         );
@@ -101,9 +104,9 @@ class _ManageSchedulesTabState extends State<ManageSchedulesTab> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
       builder: (BuildContext context, Widget? child, MainModel model) {
-        Widget content = Center(child: Text('No schedules found'));
+        Widget content = const Center(child: Text('No schedules found'));
         if (model.isLoading) {
-          content = Center(child: CircularProgressIndicator());
+          content = const Center(child: CircularProgressIndicator());
         } else if (model.allSchedules.isNotEmpty) {
           content = listSchedules(model);
         }

@@ -5,7 +5,7 @@ import '../widgets/error.dart';
 
 class SchedulePage extends StatefulWidget {
   final MainModel model;
-  SchedulePage(this.model);
+  const SchedulePage(this.model, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -16,16 +16,16 @@ class SchedulePage extends StatefulWidget {
 class _SchedulePageState extends State<SchedulePage> {
   @override
   initState() {
+    super.initState();
     widget.model.fetchSchedules().then((bool success) {
-      if (!success) {
+      if (!success && mounted) {
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ShowErrorDialogue();
+              return const ShowErrorDialogue();
             });
       }
     });
-    super.initState();
   }
 
   Widget _buildDrawer() {
@@ -40,10 +40,10 @@ class _SchedulePageState extends State<SchedulePage> {
   Widget _buildSchedule() {
     return ScopedModelDescendant<MainModel>(
         builder: (BuildContext context, Widget? child, MainModel model) {
-      Widget content = Center(child: Text('No available schedule'));
+      Widget content = const Center(child: Text('No available schedule'));
       if (model.allSchedules.isNotEmpty) {
         content = Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.cover,
               image: AssetImage('assets/background.png'),
@@ -56,7 +56,7 @@ class _SchedulePageState extends State<SchedulePage> {
                   primary: false,
                   crossAxisSpacing: 1.0,
                   mainAxisSpacing: 1.0,
-                  padding: EdgeInsets.only(top: 1.0, left: 3.0, right: 3.0),
+                  padding: const EdgeInsets.only(top: 1.0, left: 3.0, right: 3.0),
                   childAspectRatio: 2.0,
                   crossAxisCount: 8,
                   children: model.allSchedules[index].widget);
@@ -66,13 +66,13 @@ class _SchedulePageState extends State<SchedulePage> {
       } else if (model.isLoading) {
 
         content = Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.cover,
               image: AssetImage('assets/background.png'),
             ),
           ),
-          child: Center(child: CircularProgressIndicator()),
+          child: const Center(child: CircularProgressIndicator()),
         );
       }
       return content;
@@ -83,7 +83,7 @@ class _SchedulePageState extends State<SchedulePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Schedule'),
+        title: const Text('Schedule'),
       ),
       drawer: _buildDrawer(),
       body: _buildSchedule(),

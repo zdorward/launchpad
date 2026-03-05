@@ -9,7 +9,7 @@ import '../scoped-models/main.dart';
 
 class ManagerConsole extends StatefulWidget {
   final MainModel model;
-  ManagerConsole(this.model);
+  const ManagerConsole(this.model, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -26,9 +26,9 @@ class _ManagerConsoleState extends State<ManagerConsole> {
 
   Widget _updateTab(int index) {
     if (index == 0) {
-      return ManageSchedulesTab();
+      return const ManageSchedulesTab();
     } else if (index == 1) {
-      return ManageEmployeesTab();
+      return const ManageEmployeesTab();
     } else if (index == 2) {
       return ShiftLogTab(widget.model);
     }
@@ -42,7 +42,7 @@ class _ManagerConsoleState extends State<ManagerConsole> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _updateTab(_currentIndex),
-      appBar: AppBar(title: Text('Manager Console')),
+      appBar: AppBar(title: const Text('Manager Console')),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           onTap: (int index) {
@@ -50,7 +50,7 @@ class _ManagerConsoleState extends State<ManagerConsole> {
               _currentIndex = index;
             });
           },
-          items: [
+          items: const [
             BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_today), label: 'Schedules'),
             BottomNavigationBarItem(

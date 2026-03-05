@@ -4,8 +4,10 @@ import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
 
 class TradeShiftsTab extends StatefulWidget {
+  const TradeShiftsTab({super.key});
+
   @override
-  _TradeShiftsTabState createState() => _TradeShiftsTabState();
+  State<TradeShiftsTab> createState() => _TradeShiftsTabState();
 }
 
 class _TradeShiftsTabState extends State<TradeShiftsTab> {
@@ -15,9 +17,9 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
 
   @override
   initState() {
-    _firstDate = DateTime.now().subtract(Duration(days: 1));
+    _firstDate = DateTime.now().subtract(const Duration(days: 1));
     _date = DateTime.now();
-    limit = _firstDate.add(Duration(days: 100));
+    limit = _firstDate.add(const Duration(days: 100));
     super.initState();
   }
 
@@ -73,23 +75,24 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
   Widget build(BuildContext context) {
     return Container(
       padding:
-          EdgeInsets.only(top: 10.0, right: 20.0, left: 20.0, bottom: 10.0),
+          const EdgeInsets.only(top: 10.0, right: 20.0, left: 20.0, bottom: 10.0),
       child: Center(
         child: ScopedModelDescendant<MainModel>(
             builder: (BuildContext context, Widget? child, MainModel model) {
           if (model.isLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else {
             return Column(
               children: <Widget>[
-                Text(
+                const Text(
                     'Select the employee that you are trading shifts with and the date you want to trade shifts.'),
-                Divider(),
+                const Divider(),
                 Expanded(
                     child: GridView.count(
                         childAspectRatio: 3.0,
                         crossAxisCount: 2,
                         primary: false,
+                        // ignore: deprecated_member_use
                         children: List<RadioListTile<String>>.generate(
                             model.employees.length, (int index) {
                           return RadioListTile<String>(
@@ -103,36 +106,36 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
                             },
                           );
                         }))),
-                Divider(),
+                const Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
                     ElevatedButton(
-                      child: Text('Select Date'),
+                      child: const Text('Select Date'),
                       onPressed: () {
                         _selectDate(context);
                       },
                     ),
                     ElevatedButton(
-                      child: Text('Confirm'),
+                      child: const Text('Confirm'),
                       onPressed: () {
                         if (validate(model)) {
                           showDialog(
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('Trade Shifts'),
+                                  title: const Text('Trade Shifts'),
                                   content: Text(
                                       'Are you sure you want to trade shifts with $_name on ${model.days[_date.weekday]}, ${model.months[_date.month]} ${_date.day}?'),
                                   actions: <Widget>[
                                     TextButton(
-                                      child: Text('NO'),
+                                      child: const Text('NO'),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
                                     ),
                                     TextButton(
-                                      child: Text('YES'),
+                                      child: const Text('YES'),
                                       onPressed: () {
                                         Navigator.pop(context);
                                         model.isLoading = true;
@@ -148,14 +151,14 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
                                             });
                                           } else {
                                             model.isLoading = false;
-
+                                            if (!mounted) return;
                                             showDialog(
                                                 context: context,
                                                 builder:
                                                     (BuildContext context) {
                                                   return AlertDialog(
-                                                    title: Text('Error'),
-                                                    content: Text(
+                                                    title: const Text('Error'),
+                                                    content: const Text(
                                                         'An error occurred when switching shifts. Check your network connection and make sure you have selected valid data.'),
                                                     actions: <Widget>[
                                                       TextButton(
@@ -163,7 +166,7 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
                                                           Navigator.pop(
                                                               context);
                                                         },
-                                                        child: Text('OK'),
+                                                        child: const Text('OK'),
                                                       ),
                                                     ],
                                                   );
@@ -180,15 +183,15 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('Error'),
-                                  content: Text(
+                                  title: const Text('Error'),
+                                  content: const Text(
                                       'Make sure an employee and a valid date are selected'),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
-                                      child: Text('OK'),
+                                      child: const Text('OK'),
                                     ),
                                   ],
                                 );

@@ -6,6 +6,8 @@ import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
 
 class CreateSchedulePage extends StatefulWidget {
+  const CreateSchedulePage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return CreateSchedulePageState();
@@ -15,18 +17,18 @@ class CreateSchedulePage extends StatefulWidget {
 class CreateSchedulePageState extends State<CreateSchedulePage> {
   Container _buildEmployeeData(String name, String data) {
     return Container(
-      margin: EdgeInsets.all(4.0),
-      color: Colors.black.withOpacity(0.5),
-      padding: EdgeInsets.only(top: 5.0),
+      margin: const EdgeInsets.all(4.0),
+      color: Colors.black.withValues(alpha:0.5),
+      padding: const EdgeInsets.only(top: 5.0),
       child: Column(
         children: <Widget>[
           Text(
             name,
-            style: TextStyle(fontSize: 12.0, color: Colors.white),
+            style: const TextStyle(fontSize: 12.0, color: Colors.white),
           ),
           Text(
             data,
-            style: TextStyle(fontSize: 10.0, color: Colors.grey),
+            style: const TextStyle(fontSize: 10.0, color: Colors.grey),
           ),
         ],
       ),
@@ -35,9 +37,9 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
 
   Container _buildEmployeeName(String name, bool enlarged) {
     return Container(
-      margin: EdgeInsets.all(4.0),
-      padding: EdgeInsets.only(top: 5.0),
-      color: enlarged ? Colors.blueGrey : Colors.white.withOpacity(0.4),
+      margin: const EdgeInsets.all(4.0),
+      padding: const EdgeInsets.only(top: 5.0),
+      color: enlarged ? Colors.blueGrey : Colors.white.withValues(alpha:0.4),
       child: Column(
         children: <Widget>[
           Center(
@@ -55,11 +57,11 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
   }
 
   Expanded _buildDragTargets(
-      String _acceptedData, List<String?> _employeeData, MainModel model) {
-    _employeeData = model.employeeData;
+      String acceptedData, List<String?> employeeData, MainModel model) {
+    employeeData = model.employeeData;
     int count = 0;
-    bool _firstBuild = false;
-    bool _allow = false;
+    bool firstBuild = false;
+    bool allow = false;
 
     return Expanded(
         flex: 2,
@@ -74,7 +76,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                 builder: (BuildContext context, List<String?> accepted,
                     List<dynamic> rejected) {
                   if (count >= model.employees.length) {
-                    _firstBuild = !_firstBuild;
+                    firstBuild = !firstBuild;
                   }
                   if (count < model.employees.length && model.rebuild) {
                     count++;
@@ -84,25 +86,25 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                     count++;
                     return _buildEmployeeName(
                         model.employees[index].name, false);
-                  } else if (_firstBuild) {
+                  } else if (firstBuild) {
                     return _buildEmployeeName(
                         model.employees[index].name, true);
-                  } else if (_allow) {
-                    _allow = false;
-                    _employeeData[index] = _acceptedData;
-                    model.setEmployeeData(_employeeData);
+                  } else if (allow) {
+                    allow = false;
+                    employeeData[index] = acceptedData;
+                    model.setEmployeeData(employeeData);
                     return _buildEmployeeData(
-                        model.employees[index].name, _employeeData[index] ?? '');
+                        model.employees[index].name, employeeData[index] ?? '');
                   } else {
-                    return _employeeData[index] == null
+                    return employeeData[index] == null
                         ? _buildEmployeeName(model.employees[index].name, false)
                         : _buildEmployeeData(
-                            model.employees[index].name, _employeeData[index] ?? '');
+                            model.employees[index].name, employeeData[index] ?? '');
                   }
                 },
                 onAcceptWithDetails: (DragTargetDetails<String> details) {
-                  _allow = true;
-                  _acceptedData = details.data;
+                  allow = true;
+                  acceptedData = details.data;
                 },
               );
             },
@@ -110,7 +112,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
         ));
   }
 
-  List<String> _weekdayShifts = [
+  final List<String> _weekdayShifts = [
     '9.0 | 17.0',
     '9.5 | 16.0',
     '9.5 | 16.0',
@@ -124,7 +126,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
     '17.0 | 22.0',
     '18.0 | 22.0',
   ];
-  List<String> _fridayShifts = [
+  final List<String> _fridayShifts = [
     '9.0 | 17.0',
     '9.5 | 17.0',
     '13.0 | 19.0',
@@ -135,7 +137,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
     '18.0 | 23.0',
     '19.0 | 23.0',
   ];
-  List<String> _saturdayShifts = [
+  final List<String> _saturdayShifts = [
     '9.0 | 16.5',
     '9.5 | 16.5',
     '11.0 | 16.5',
@@ -148,7 +150,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
     '16.5 | 23.0',
     '19.0 | 23.0',
   ];
-  List<String> _sundayShifts = [
+  final List<String> _sundayShifts = [
     '10.5 | 18.0',
     '11.0 | 15.0',
     '11.0 | 16.0',
@@ -178,12 +180,12 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
     return Expanded(
       flex: 1,
       child: DraggableScrollbar.arrows(
-        padding: EdgeInsets.only(right: 3.0),
+        padding: const EdgeInsets.only(right: 3.0),
         backgroundColor: Colors.black54,
         alwaysVisibleScrollThumb: true,
         controller: controller,
         child: GridView.count(
-          padding: EdgeInsets.only(right: 25.0),
+          padding: const EdgeInsets.only(right: 25.0),
           controller: controller,
           primary: false,
           childAspectRatio: 2.0,
@@ -192,7 +194,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
             returnedTimes.length + 1,
             (int index) {
               return Container(
-                margin: EdgeInsets.all(4.0),
+                margin: const EdgeInsets.all(4.0),
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.0),
                     color: Colors.blue),
@@ -200,7 +202,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                     ? Draggable<String>(
                         data: returnedTimes[index],
                         feedback: Material(
-                          color: Colors.blue.withOpacity(0.3),
+                          color: Colors.blue.withValues(alpha:0.3),
                           child: Center(
                             child: Text(
                               returnedTimes[index],
@@ -212,7 +214,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                           child: Center(
                             child: Text(
                               returnedTimes[index],
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -220,7 +222,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                         ),
                       )
                     : TextButton(
-                        child: Text(
+                        child: const Text(
                           'Custom',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -232,7 +234,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                               builder: (BuildContext context) {
                                 model.rebuild = true;
                                 return SimpleDialog(
-                                  title: Text('Add shift'),
+                                  title: const Text('Add shift'),
                                   children: <Widget>[
                                     SimpleDialogOption(
                                       child: TextField(
@@ -241,9 +243,9 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                                           model.rebuild = true;
                                         },
                                         keyboardType:
-                                            TextInputType.numberWithOptions(
+                                            const TextInputType.numberWithOptions(
                                                 decimal: true),
-                                        decoration: InputDecoration(
+                                        decoration: const InputDecoration(
                                           labelText: 'Start time',
                                         ),
                                       ),
@@ -255,9 +257,9 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                                           model.rebuild = true;
                                         },
                                         keyboardType:
-                                            TextInputType.numberWithOptions(
+                                            const TextInputType.numberWithOptions(
                                                 decimal: true),
-                                        decoration: InputDecoration(
+                                        decoration: const InputDecoration(
                                           labelText: 'End time',
                                         ),
                                       ),
@@ -273,24 +275,24 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                                                   end.trim() != '') {
                                                 if (model.countDay < 4) {
                                                   _weekdayShifts
-                                                      .add(start + ' | ' + end);
+                                                      .add('$start | $end');
                                                 } else if (model.countDay ==
                                                     4) {
                                                   _fridayShifts
-                                                      .add(start + ' | ' + end);
+                                                      .add('$start | $end');
                                                 } else if (model.countDay ==
                                                     5) {
                                                   _saturdayShifts
-                                                      .add(start + ' | ' + end);
+                                                      .add('$start | $end');
                                                 } else {
                                                   _sundayShifts
-                                                      .add(start + ' | ' + end);
+                                                      .add('$start | $end');
                                                 }
 
                                                 Navigator.pop(context);
                                               }
                                             },
-                                            child: Text('Confirm'),
+                                            child: const Text('Confirm'),
                                           )
                                         ],
                                       ),
@@ -321,17 +323,17 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
   Widget container(String text, bool isGrey) {
     isGrey = true;
     return Container(
+        color: Colors.white.withValues(alpha:0.9),
         child: Center(
           child: Text(
             text,
-            style: TextStyle(fontSize: 9.0),
+            style: const TextStyle(fontSize: 9.0),
           ),
-        ),
-        color: Colors.white.withOpacity(0.9));
+        ));
   }
 
   void _buildSchedule(MainModel model) {
-    model.temporaryDate = model.savedDate.subtract(Duration(days: 1));
+    model.temporaryDate = model.savedDate.subtract(const Duration(days: 1));
     int dayOfWeek = 0;
     int employeeIndex = 0;
     int testIndex = -1;
@@ -344,7 +346,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
         data[index] = '${model.tempDate.day}';
       } else if (index % 8 == 0) {
         testIndex = testIndex + 1;
-        data[index] = '${model.employees[employeeIndex++].name}';
+        data[index] = model.employees[employeeIndex++].name;
       } else {
         String shift = '';
 
@@ -363,20 +365,20 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
     model.setData(data);
   }
 
-  List<bool> _selected = [true, false, false, false, false, false, false];
+  final List<bool> _selected = [true, false, false, false, false, false, false];
   @override
   Widget build(BuildContext context) {
-    String _acceptedData = '';
+    String acceptedData = '';
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Create Schedule'),
+        title: const Text('Create Schedule'),
       ),
       body: ScopedModelDescendant<MainModel>(
           builder: (BuildContext context, Widget? child, MainModel model) {
-        List<String?> _employeeData = List.filled(model.employees.length, null);
+        List<String?> employeeData = List.filled(model.employees.length, null);
         if (!model.rebuild) {
-          model.setEmployeeData(_employeeData);
+          model.setEmployeeData(employeeData);
         }
 
         if (_selected[0]) {
@@ -385,10 +387,10 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
             model.schedule.add(test);
           }
         }
-        DateTime _dateSelected = model.savedDate;
-        model.setTemporaryDate(_dateSelected.subtract(Duration(days: 1)));
+        DateTime dateSelected = model.savedDate;
+        model.setTemporaryDate(dateSelected.subtract(const Duration(days: 1)));
         return Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             image: DecorationImage(
               fit: BoxFit.cover,
               image: AssetImage('assets/background.png'),
@@ -404,13 +406,13 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                 }),
               ),
             ),
-            _buildDragTargets(_acceptedData, _employeeData, model),
+            _buildDragTargets(acceptedData, employeeData, model),
             _buildDraggables(model),
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
                   ElevatedButton(
-                    child: Text('Exit'),
+                    child: const Text('Exit'),
                     onPressed: () {
                       model.rebuild = false;
                       model.countDay = 0;
@@ -419,13 +421,13 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                     },
                   ),
                   ElevatedButton(
-                    child: Text('Reset'),
+                    child: const Text('Reset'),
                     onPressed: () => setState(() {
                           model.rebuild = false;
                         }),
                   ),
                   model.isLoading
-                      ? Center(child: CircularProgressIndicator())
+                      ? const Center(child: CircularProgressIndicator())
                       : ElevatedButton(
                           child: Text(model.countDay == 6 ? 'Confirm' : 'Next'),
                           onPressed: () {
@@ -434,6 +436,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                             if (model.countDay == 7) {
                               _buildSchedule(model);
                               model.addSchedule().then((bool success) {
+                                if (!mounted) return;
                                 if (success) {
                                   model.countDay = 0;
                                   Navigator.pushReplacementNamed(

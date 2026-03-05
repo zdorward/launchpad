@@ -10,7 +10,7 @@ import '../widgets/error.dart';
 
 class PersonalShiftLogTab extends StatefulWidget {
   final MainModel model;
-  PersonalShiftLogTab(this.model);
+  const PersonalShiftLogTab(this.model, {super.key});
 
   @override
   State<StatefulWidget> createState() {
@@ -21,17 +21,17 @@ class PersonalShiftLogTab extends StatefulWidget {
 class _PersonalShiftLogTabState extends State<PersonalShiftLogTab> {
   @override
   initState() {
+    super.initState();
     widget.model.fetchUpdates().then((bool success) {
       widget.model.isLoading = false;
-      if (!success) {
+      if (!success && mounted) {
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ShowErrorDialogue();
+              return const ShowErrorDialogue();
             });
       }
     });
-    super.initState();
   }
 
   List<Update> findPersonalUpdates(MainModel model) {
@@ -72,28 +72,28 @@ class _PersonalShiftLogTabState extends State<PersonalShiftLogTab> {
                 text: TextSpan(
                     style: DefaultTextStyle.of(context).style,
                     children: <TextSpan>[
-                      TextSpan(text: 'You traded shifts with '),
+                      const TextSpan(text: 'You traded shifts with '),
                       TextSpan(
                         text: otherEmployee,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      TextSpan(text: ' on '),
+                      const TextSpan(text: ' on '),
                       TextSpan(
-                        text: '${update.date}',
+                        text: update.date,
                       ),
                     ]),
               ),
               trailing: update.seen
-                  ? Icon(
+                  ? const Icon(
                       Icons.check,
                       color: Colors.green,
                     )
-                  : Icon(
+                  : const Icon(
                       Icons.check,
                       color: Colors.grey,
                     ),
             ),
-            Divider()
+            const Divider()
           ],
         );
       },
@@ -104,9 +104,9 @@ class _PersonalShiftLogTabState extends State<PersonalShiftLogTab> {
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
         builder: (BuildContext context, Widget? child, MainModel model) {
-      Widget content = Center(child: Text('No updates found'));
+      Widget content = const Center(child: Text('No updates found'));
       if (model.isLoading) {
-        content = Center(child: CircularProgressIndicator());
+        content = const Center(child: CircularProgressIndicator());
       } else if (model.shiftChangeHistory.isNotEmpty) {
         content = listUpdates(model);
       }

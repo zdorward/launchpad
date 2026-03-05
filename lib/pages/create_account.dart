@@ -5,6 +5,8 @@ import '../scoped-models/main.dart';
 import '../widgets/error.dart';
 
 class CreateAccountPage extends StatefulWidget {
+  const CreateAccountPage({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _CreateAccountPageState();
@@ -27,8 +29,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   String attemptedAccessCode = '';
   bool manager = false;
 
-  String _employeeAccessCode = 'UvdX83u';
-  String _managerAccessCode = 'QeFH15f';
+  final String _employeeAccessCode = 'UvdX83u';
+  final String _managerAccessCode = 'QeFH15f';
 
   Widget space(double height) {
     return SizedBox(height: height);
@@ -40,6 +42,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // ignore: deprecated_member_use
             Radio<String>(
               value: 'employee',
               groupValue: groupValue,
@@ -50,9 +53,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                 });
               },
             ),
-            SizedBox(
+            const SizedBox(
               width: 50.0,
             ),
+            // ignore: deprecated_member_use
             Radio<String>(
               value: 'manager',
               groupValue: groupValue,
@@ -65,7 +69,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             )
           ],
         ),
-        Row(
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Employee'),
@@ -81,13 +85,14 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   _createAccount(MainModel model) {
     model.addEmployee(name, id, pin, manager).then((bool success) {
+      if (!mounted) return;
       if (success) {
         Navigator.pushReplacementNamed(context, '/login');
       } else {
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ShowErrorDialogue();
+              return const ShowErrorDialogue();
             });
       }
     });
@@ -112,7 +117,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       onSaved: (String? value) {
         name = value?.trim() ?? '';
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'First name',
         filled: true,
         fillColor: Colors.white,
@@ -140,7 +145,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         id = int.tryParse(value ?? '') ?? 0;
       },
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'Employee ID',
         filled: true,
         fillColor: Colors.white,
@@ -162,7 +167,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       },
       obscureText: true,
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'PIN',
         filled: true,
         fillColor: Colors.white,
@@ -184,7 +189,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       onSaved: (String? value) {
         attemptedAccessCode = value ?? '';
       },
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         labelText: 'Access Code',
         filled: true,
         fillColor: Colors.white,
@@ -197,25 +202,20 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
     return Scaffold(
       backgroundColor: Colors.blue[50],
       appBar: AppBar(
-        title: Text('Create Account'),
+        title: const Text('Create Account'),
       ),
       body: Container(
-        padding: EdgeInsets.all(20.0),
+        padding: const EdgeInsets.all(20.0),
         child: Center(
           child: SingleChildScrollView(
-            child: Container(
-              child: Form(
-                key: _formKey,
-                child: ScopedModelDescendant<MainModel>(builder:
-                    (BuildContext context, Widget? child, MainModel model) {
+            child: Form(
+              key: _formKey,
+              child: ScopedModelDescendant<MainModel>(
+                builder: (BuildContext context, Widget? child, MainModel model) {
                   return Column(
                     children: [
-                      Container(
-                        child: _radioButton(),
-                      ),
-                      SizedBox(
-                        height: 70.0,
-                      ),
+                      _radioButton(),
+                      const SizedBox(height: 70.0),
                       nameTextField(model),
                       space(10.0),
                       idTextField(model),
@@ -235,11 +235,11 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                           }
                           _createAccount(model);
                         },
-                        child: Text('Create Account'),
+                        child: const Text('Create Account'),
                       ),
                     ],
                   );
-                }),
+                },
               ),
             ),
           ),

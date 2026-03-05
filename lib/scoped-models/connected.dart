@@ -35,7 +35,7 @@ mixin UserModel on ConnectedModel {
       'logged in': false
     };
     return http
-        .post(Uri.parse('https://launchpad-9e294.firebaseio.com/employees.json'),
+        .post(Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/employees.json'),
             body: json.encode(employeeData))
         .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -60,7 +60,7 @@ mixin UserModel on ConnectedModel {
   Future<bool> fetchEmployees() {
     notifyListeners();
     return http
-        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/employees.json'))
+        .get(Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/employees.json'))
         .then((http.Response response) {
       final Map<String, dynamic>? employeeListData = json.decode(response.body);
       if (employeeListData == null) {
@@ -128,7 +128,7 @@ mixin UserModel on ConnectedModel {
     notifyListeners();
     return http
         .delete(
-            Uri.parse('https://launchpad-9e294.firebaseio.com/employees/$deletedEmployeeKey.json'))
+            Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/employees/$deletedEmployeeKey.json'))
         .then((http.Response respose) {
       _employees.removeAt(index);
       isLoading = false;
@@ -168,7 +168,7 @@ mixin UserModel on ConnectedModel {
     };
 
     http.put(
-        Uri.parse('https://launchpad-9e294.firebaseio.com/employees/${identifiedEmployee.key}.json'),
+        Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/employees/${identifiedEmployee.key}.json'),
         body: json.encode(employeeData));
 
     notifyListeners();
@@ -177,7 +177,7 @@ mixin UserModel on ConnectedModel {
   Future<bool> updateUser(int index) {
     isLoading = true;
     return http
-        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/employees.json'))
+        .get(Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/employees.json'))
         .then((http.Response response) {
       final Map<String, dynamic>? employeeListData = json.decode(response.body);
       if (employeeListData == null) {
@@ -303,7 +303,7 @@ mixin ScheduleModel on ConnectedModel {
   }
 
   DateTime get tempDate {
-    return temporaryDate = temporaryDate.add(Duration(days: 1));
+    return temporaryDate = temporaryDate.add(const Duration(days: 1));
   }
 
   void addDay() {
@@ -318,13 +318,13 @@ mixin ScheduleModel on ConnectedModel {
       smaller = true;
     }
     return Container(
+      color: isGrey ? Colors.white.withValues(alpha: 0.9) : Colors.white,
       child: Center(
         child: Text(
           text ?? '',
           style: TextStyle(fontSize: smaller ? 7.5 : 9.0),
         ),
       ),
-      color: isGrey ? Colors.white.withOpacity(0.9) : Colors.white,
     );
   }
 
@@ -361,7 +361,7 @@ mixin ScheduleModel on ConnectedModel {
     };
     return http
         .put(
-            Uri.parse('https://launchpad-9e294.firebaseio.com/employees/${otherEmployee?.key}.json'),
+            Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/employees/${otherEmployee?.key}.json'),
             body: json.encode(employeeData))
         .then((http.Response response) {
       notifyListeners();
@@ -377,7 +377,7 @@ mixin ScheduleModel on ConnectedModel {
     isLoading = true;
     return http
         .delete(
-            Uri.parse('https://launchpad-9e294.firebaseio.com/employees/${_loggedInUser.key}/requests/$index.json'))
+            Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/employees/${_loggedInUser.key}/requests/$index.json'))
         .then((http.Response response) {
       _employees[_loggedInUserIndex].requests.removeAt(index);
       _loggedInUser = _employees[_loggedInUserIndex];
@@ -460,7 +460,7 @@ mixin ScheduleModel on ConnectedModel {
       'employee names': identifiedSchedule.employeeNames,
     };
     url =
-        'https://launchpad-9e294.firebaseio.com/schedules/${identifiedSchedule.key}.json';
+        'https://launchpad-2bfd9-default-rtdb.firebaseio.com/schedules/${identifiedSchedule.key}.json';
 
     return http
         .put(Uri.parse(url), body: json.encode(updatedSchedule))
@@ -483,7 +483,7 @@ mixin ScheduleModel on ConnectedModel {
         showDialog(
             context: context,
             builder: (BuildContext context) {
-              return ShowErrorDialogue();
+              return const ShowErrorDialogue();
             });
       }
     });
@@ -496,7 +496,7 @@ mixin ScheduleModel on ConnectedModel {
     };
 
     return http
-        .post(Uri.parse('https://launchpad-9e294.firebaseio.com/updates.json'),
+        .post(Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/updates.json'),
             body: json.encode(employeeData))
         .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -510,7 +510,7 @@ mixin ScheduleModel on ConnectedModel {
       if (_shiftChangeHistory.length > 50) {
         String identifiedUpdateKey = _shiftChangeHistory[0].key;
         http.delete(
-            Uri.parse('https://launchpad-9e294.firebaseio.com/updates/$identifiedUpdateKey.json'));
+            Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/updates/$identifiedUpdateKey.json'));
         _shiftChangeHistory = _shiftChangeHistory.sublist(1);
       }
       notifyListeners();
@@ -532,7 +532,7 @@ mixin ScheduleModel on ConnectedModel {
       'seen': true,
     };
     http.put(
-        Uri.parse('https://launchpad-9e294.firebaseio.com/updates/${identifiedUpdate.key}.json'),
+        Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/updates/${identifiedUpdate.key}.json'),
         body: json.encode(updatedUpdate));
     _shiftChangeHistory[index].seen = true;
     notifyListeners();
@@ -541,7 +541,7 @@ mixin ScheduleModel on ConnectedModel {
   Future<bool> fetchUpdates() {
     isLoading = true;
     return http
-        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/updates.json'))
+        .get(Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/updates.json'))
         .then((http.Response response) {
       final Map<String, dynamic>? updateListData = json.decode(response.body);
       if (updateListData == null) {
@@ -610,12 +610,12 @@ mixin ScheduleModel on ConnectedModel {
     final Map<String, dynamic> scheduleData = {
       'data': data,
       'first date': savedDate.toIso8601String(),
-      'last date': tempDate.subtract(Duration(days: 1)).toIso8601String(),
+      'last date': tempDate.subtract(const Duration(days: 1)).toIso8601String(),
       'employee names': employeeNames
     };
     try {
       final http.Response response = await http.post(
-          Uri.parse('https://launchpad-9e294.firebaseio.com/schedules.json'),
+          Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/schedules.json'),
           body: json.encode(scheduleData));
 
       if (response.statusCode != 200 && response.statusCode != 201) {
@@ -631,7 +631,7 @@ mixin ScheduleModel on ConnectedModel {
           data: data,
           widget: widgetSchedule,
           firstDate: savedDate,
-          lastDate: tempDate.subtract(Duration(days: 1)),
+          lastDate: tempDate.subtract(const Duration(days: 1)),
           employeeNames: employeeNames,
         ),
       );
@@ -649,7 +649,7 @@ mixin ScheduleModel on ConnectedModel {
     isLoading = true;
     notifyListeners();
     return http
-        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/schedules.json'))
+        .get(Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/schedules.json'))
         .then((http.Response response) {
       isLoading = false;
       notifyListeners();
@@ -699,7 +699,7 @@ mixin ScheduleModel on ConnectedModel {
     notifyListeners();
     return http
         .delete(
-            Uri.parse('https://launchpad-9e294.firebaseio.com/schedules/$deletedScheduleID.json'))
+            Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/schedules/$deletedScheduleID.json'))
         .then((http.Response respose) {
       allSchedules.removeAt(index);
       isLoading = false;
@@ -775,7 +775,7 @@ mixin PromotionsModel on ConnectedModel {
       'description': description,
     };
     return http
-        .post(Uri.parse('https://launchpad-9e294.firebaseio.com/promotions.json'),
+        .post(Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/promotions.json'),
             body: json.encode(promotionData))
         .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -794,7 +794,7 @@ mixin PromotionsModel on ConnectedModel {
   Future<bool> fetchPromotions() {
     isLoading = true;
     return http
-        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/promotions.json'))
+        .get(Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/promotions.json'))
         .then((http.Response response) {
       final Map<String, dynamic>? promotionListData = json.decode(response.body);
       if (promotionListData == null) {
@@ -837,7 +837,7 @@ mixin PromotionsModel on ConnectedModel {
 
     return http
         .delete(
-            Uri.parse('https://launchpad-9e294.firebaseio.com/promotions/$deletedPromotionKey.json'))
+            Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/promotions/$deletedPromotionKey.json'))
         .then((http.Response respose) {
       _promotions.removeAt(index);
       isLoading = false;
@@ -866,7 +866,7 @@ mixin ShiftModel on ConnectedModel {
       'shift': shift
     };
     return http
-        .post(Uri.parse('https://launchpad-9e294.firebaseio.com/shifts.json'),
+        .post(Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/shifts.json'),
             body: json.encode(shiftData))
         .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -891,7 +891,7 @@ mixin ShiftModel on ConnectedModel {
     isLoading = true;
     notifyListeners();
     return http
-        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/shifts.json'))
+        .get(Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/shifts.json'))
         .then((http.Response response) {
       final Map<String, dynamic>? shiftListData = json.decode(response.body);
       if (shiftListData == null) {
@@ -931,7 +931,7 @@ mixin ShiftModel on ConnectedModel {
 
     return http
         .delete(
-            Uri.parse('https://launchpad-9e294.firebaseio.com/shifts/$deletedShiftKey.json'))
+            Uri.parse('https://launchpad-2bfd9-default-rtdb.firebaseio.com/shifts/$deletedShiftKey.json'))
         .then((http.Response respose) {
       _shiftPool.removeAt(index);
       isLoading = false;
@@ -949,26 +949,26 @@ mixin ListTileModel on ConnectedModel {
     if (_loggedInUser.manager) {
       return [
         AppBar(
-          title: Text('Menu'),
+          title: const Text('Menu'),
         ),
-        ScheduleListTile(),
-        RequestShiftChangeListTile(),
-        ShiftPoolListTile(),
-        CreateScheduleListTile(),
-        ManagerConsoleListTile(),
-        PromotionsListTile(),
-        AccountListTile(),
+        const ScheduleListTile(),
+        const RequestShiftChangeListTile(),
+        const ShiftPoolListTile(),
+        const CreateScheduleListTile(),
+        const ManagerConsoleListTile(),
+        const PromotionsListTile(),
+        const AccountListTile(),
       ];
     } else {
       return [
         AppBar(
-          title: Text('Menu'),
+          title: const Text('Menu'),
         ),
-        ScheduleListTile(),
-        RequestShiftChangeListTile(),
-        ShiftPoolListTile(),
-        PromotionsListTile(),
-        AccountListTile()
+        const ScheduleListTile(),
+        const RequestShiftChangeListTile(),
+        const ShiftPoolListTile(),
+        const PromotionsListTile(),
+        const AccountListTile()
       ];
     }
   }

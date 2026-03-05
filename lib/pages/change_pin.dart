@@ -6,8 +6,10 @@ import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
 
 class ChangePINPage extends StatefulWidget {
+  const ChangePINPage({super.key});
+
   @override
-  _ChangePINPageState createState() => _ChangePINPageState();
+  State<ChangePINPage> createState() => _ChangePINPageState();
 }
 
 class _ChangePINPageState extends State<ChangePINPage> {
@@ -24,10 +26,10 @@ class _ChangePINPageState extends State<ChangePINPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Change PIN'),
+        title: const Text('Change PIN'),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
+        padding: const EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
         child: Form(
           key: _passFormKey,
           child: ScopedModelDescendant<MainModel>(
@@ -47,7 +49,7 @@ class _ChangePINPageState extends State<ChangePINPage> {
                     onSaved: (String? value) {
                       oldPass = value ?? '';
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Old PIN',
                     ),
                   ),
@@ -58,7 +60,7 @@ class _ChangePINPageState extends State<ChangePINPage> {
                     onChanged: (String value) {
                       newPass1 = value;
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'New PIN',
                     ),
                   ),
@@ -74,11 +76,11 @@ class _ChangePINPageState extends State<ChangePINPage> {
                     onSaved: (String? value) {
                       newPass2 = value ?? '';
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Confirm PIN',
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 50.0,
                   ),
                   Row(
@@ -90,7 +92,7 @@ class _ChangePINPageState extends State<ChangePINPage> {
                               .invokeMethod('TextInput.hide');
                           Navigator.pop(context);
                         },
-                        child: Text('Cancel'),
+                        child: const Text('Cancel'),
                       ),
                       TextButton(
                         style: TextButton.styleFrom(
@@ -107,7 +109,7 @@ class _ChangePINPageState extends State<ChangePINPage> {
 
                           Navigator.pop(context);
                         },
-                        child: Text('Confirm'),
+                        child: const Text('Confirm'),
                       ),
                     ],
                   ),

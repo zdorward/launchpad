@@ -4,8 +4,10 @@ import 'package:scoped_model/scoped_model.dart';
 import '../scoped-models/main.dart';
 
 class AccountPage extends StatefulWidget {
+  const AccountPage({super.key});
+
   @override
-  _AccountPageState createState() => _AccountPageState();
+  State<AccountPage> createState() => _AccountPageState();
 }
 
 class _AccountPageState extends State<AccountPage> {
@@ -35,7 +37,7 @@ class _AccountPageState extends State<AccountPage> {
             name = value?.trim() ?? '';
           },
           decoration: InputDecoration(
-            labelText: 'Name: ' + model.user.name,
+            labelText: 'Name: ${model.user.name}',
             filled: true,
             fillColor: Colors.white,
           ),
@@ -48,7 +50,7 @@ class _AccountPageState extends State<AccountPage> {
     return TextFormField(
       enabled: false,
       decoration: InputDecoration(
-        labelText: 'ID: ' + model.user.id.toString(),
+        labelText: 'ID: ${model.user.id}',
         filled: true,
         fillColor: Colors.white,
       ),
@@ -74,18 +76,18 @@ class _AccountPageState extends State<AccountPage> {
           obscureText: true,
           enabled: false,
           decoration: InputDecoration(
-            labelText: display ? 'PIN: ' + model.user.pin : 'PIN: ****',
+            labelText: display ? 'PIN: ${model.user.pin}' : 'PIN: ****',
             filled: true,
             fillColor: Colors.white,
           ),
         ),
         TextButton(
           child: !display
-              ? Text(
+              ? const Text(
                   'Show PIN',
                   style: TextStyle(fontSize: 12.0),
                 )
-              : Text(
+              : const Text(
                   'Hide PIN',
                   style: TextStyle(fontSize: 12.0),
                 ),
@@ -103,10 +105,10 @@ class _AccountPageState extends State<AccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Account'),
+        title: const Text('Account'),
       ),
       body: Container(
-        padding: EdgeInsets.only(top: 30.0),
+        padding: const EdgeInsets.only(top: 30.0),
         child: Form(
           key: _formKey,
           child: ScopedModelDescendant<MainModel>(
@@ -115,30 +117,29 @@ class _AccountPageState extends State<AccountPage> {
                 //crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   _nameForm(model),
-                  SizedBox(height: 5.0),
+                  const SizedBox(height: 5.0),
                   idForm(model),
-                  SizedBox(height: 5.0),
+                  const SizedBox(height: 5.0),
                   statusForm(model),
-                  SizedBox(height: 5.0),
+                  const SizedBox(height: 5.0),
                   pinForm(model),
-                  SizedBox(height: 5.0),
+                  const SizedBox(height: 5.0),
                   TextButton(
                     style: TextButton.styleFrom(
                       foregroundColor: Theme.of(context).colorScheme.secondary,
                     ),
-                    child: Text('Change PIN'),
+                    child: const Text('Change PIN'),
                     onPressed: () {
                       Navigator.pushNamed(context, '/change_pin');
                     },
                   ),
                   Expanded(
                       child: Container(
-                    margin: EdgeInsets.only(bottom: 50.0),
+                    margin: const EdgeInsets.only(bottom: 50.0),
                     alignment: Alignment.bottomCenter,
                     child: SizedBox(
                       width: double.infinity,
                       child: TextButton(
-                        child: Text('Logout'),
                         style: TextButton.styleFrom(
                           backgroundColor: Colors.white,
                           foregroundColor: Colors.red,
@@ -146,6 +147,7 @@ class _AccountPageState extends State<AccountPage> {
                         onPressed: () {
                           Navigator.pushReplacementNamed(context, '/');
                         },
+                        child: const Text('Logout'),
                       ),
                     ),
                   )),
