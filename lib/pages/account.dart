@@ -5,7 +5,7 @@ import '../scoped-models/main.dart';
 
 class AccountPage extends StatefulWidget {
   @override
-  _AccountPageState createState() => new _AccountPageState();
+  _AccountPageState createState() => _AccountPageState();
 }
 
 class _AccountPageState extends State<AccountPage> {
@@ -14,7 +14,7 @@ class _AccountPageState extends State<AccountPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _nameFocusNode = FocusNode();
 
-  String name;
+  String name = '';
 
   Widget _buildDrawer(BuildContext context, MainModel model) {
     return Drawer(
@@ -27,10 +27,12 @@ class _AccountPageState extends State<AccountPage> {
       children: [
         TextFormField(
           enabled: enabled,
-          validator: (String value) {},
+          validator: (String? value) {
+            return null;
+          },
           focusNode: _nameFocusNode,
-          onSaved: (String value) {
-            name = value.trim();
+          onSaved: (String? value) {
+            name = value?.trim() ?? '';
           },
           decoration: InputDecoration(
             labelText: 'Name: ' + model.user.name,
@@ -77,7 +79,7 @@ class _AccountPageState extends State<AccountPage> {
             fillColor: Colors.white,
           ),
         ),
-        FlatButton(
+        TextButton(
           child: !display
               ? Text(
                   'Show PIN',
@@ -107,8 +109,8 @@ class _AccountPageState extends State<AccountPage> {
         padding: EdgeInsets.only(top: 30.0),
         child: Form(
           key: _formKey,
-          child: ScopedModelDescendant(
-            builder: (BuildContext context, Widget child, MainModel model) {
+          child: ScopedModelDescendant<MainModel>(
+            builder: (BuildContext context, Widget? child, MainModel model) {
               return Column(
                 //crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
@@ -120,8 +122,10 @@ class _AccountPageState extends State<AccountPage> {
                   SizedBox(height: 5.0),
                   pinForm(model),
                   SizedBox(height: 5.0),
-                  FlatButton(
-                    textColor: Theme.of(context).accentColor,
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context).colorScheme.secondary,
+                    ),
                     child: Text('Change PIN'),
                     onPressed: () {
                       Navigator.pushNamed(context, '/change_pin');
@@ -133,10 +137,12 @@ class _AccountPageState extends State<AccountPage> {
                     alignment: Alignment.bottomCenter,
                     child: SizedBox(
                       width: double.infinity,
-                      child: FlatButton(
+                      child: TextButton(
                         child: Text('Logout'),
-                        color: Colors.white,
-                        textColor: Colors.red,
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: Colors.red,
+                        ),
                         onPressed: () {
                           Navigator.pushReplacementNamed(context, '/');
                         },
@@ -149,8 +155,8 @@ class _AccountPageState extends State<AccountPage> {
           ),
         ),
       ),
-      drawer: ScopedModelDescendant(
-        builder: (BuildContext context, Widget child, MainModel model) {
+      drawer: ScopedModelDescendant<MainModel>(
+        builder: (BuildContext context, Widget? child, MainModel model) {
           return _buildDrawer(context, model);
         },
       ),

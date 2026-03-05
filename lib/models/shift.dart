@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Shift {
   final String key;
   final String employeeName;
@@ -7,9 +5,9 @@ class Shift {
   final String shift;
 
   Shift({
-    @required this.key,
-    @required this.employeeName,
-    @required this.date,
-    @required this.shift
+    required this.key,
+    required this.employeeName,
+    required this.date,
+    required this.shift,
   });
 }

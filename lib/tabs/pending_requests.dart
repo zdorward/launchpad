@@ -6,7 +6,7 @@ import '../widgets/error.dart';
 
 class PendingRequestsTab extends StatefulWidget {
   @override
-  _PendingRequestsTabState createState() => new _PendingRequestsTabState();
+  _PendingRequestsTabState createState() => _PendingRequestsTabState();
 }
 
 class _PendingRequestsTabState extends State<PendingRequestsTab> {
@@ -23,13 +23,14 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text('Decline'),
-                    color: Colors.red.withOpacity(0.9),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.withOpacity(0.9),
+                    ),
                     onPressed: () {
                       model.isLoading = true;
                       model.deleteRequest(index).then((bool success) {
-                        //setState(() {});
                         model.isLoading = false;
                         if (!success) {
                           showDialog(
@@ -42,9 +43,11 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
                     },
                   ),
                   SizedBox(width: 10.0),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text('Accept'),
-                    color: Colors.green.withOpacity(0.9),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green.withOpacity(0.9),
+                    ),
                     onPressed: () {
                       DateTime date =
                           DateTime.parse(model.user.requests[index]['date']);
@@ -58,7 +61,7 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
                                 content: Text(
                                     'It looks like the data in this request is no longer valid. Press "Okay" to delete this request.'),
                                 actions: <Widget>[
-                                  FlatButton(
+                                  TextButton(
                                     onPressed: () {
                                       model.deleteRequest(index);
                                       Navigator.pop(context);
@@ -105,7 +108,7 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
     if (name == null || name == model.user.name) {
       return false;
     }
-    if (model.allSchedules.length <= 0) {
+    if (model.allSchedules.isEmpty) {
       return false;
     }
 
@@ -134,7 +137,7 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
-        builder: (BuildContext context, Widget child, MainModel model) {
+        builder: (BuildContext context, Widget? child, MainModel model) {
       List<dynamic> requests = model.user.requests;
 
       Widget content = Column(
@@ -152,7 +155,7 @@ class _PendingRequestsTabState extends State<PendingRequestsTab> {
 
       if (model.isLoading) {
         content = Container(child: Center(child: CircularProgressIndicator()));
-      } else if (requests != null && requests.length > 0) {
+      } else if (requests.isNotEmpty) {
         content = listRequests(model, requests);
       }
       return RefreshIndicator(

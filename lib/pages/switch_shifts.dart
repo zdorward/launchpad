@@ -51,14 +51,14 @@ class _SwitchShiftsPageState extends State<SwitchShiftsPage> {
           },
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.swap_horiz), title: Text('Trade')),
+                icon: Icon(Icons.swap_horiz), label: 'Trade'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.timer), title: Text('Pending Requests')),
+                icon: Icon(Icons.timer), label: 'Pending Requests'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.update), title: Text('Personal Updates')),
+                icon: Icon(Icons.update), label: 'Personal Updates'),
           ]),
-      drawer: ScopedModelDescendant(
-        builder: (BuildContext context, Widget child, MainModel model) {
+      drawer: ScopedModelDescendant<MainModel>(
+        builder: (BuildContext context, Widget? child, MainModel model) {
           return _buildDrawer(context, model);
         },
       ),

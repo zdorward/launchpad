@@ -55,7 +55,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
   }
 
   Expanded _buildDragTargets(
-      String _acceptedData, List<String> _employeeData, MainModel model) {
+      String _acceptedData, List<String?> _employeeData, MainModel model) {
     _employeeData = model.employeeData;
     int count = 0;
     bool _firstBuild = false;
@@ -71,7 +71,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
             model.employees.length,
             (int index) {
               return DragTarget<String>(
-                builder: (BuildContext context, List<String> accepted,
+                builder: (BuildContext context, List<String?> accepted,
                     List<dynamic> rejected) {
                   if (count >= model.employees.length) {
                     _firstBuild = !_firstBuild;
@@ -92,17 +92,17 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                     _employeeData[index] = _acceptedData;
                     model.setEmployeeData(_employeeData);
                     return _buildEmployeeData(
-                        model.employees[index].name, _employeeData[index]);
+                        model.employees[index].name, _employeeData[index] ?? '');
                   } else {
                     return _employeeData[index] == null
                         ? _buildEmployeeName(model.employees[index].name, false)
                         : _buildEmployeeData(
-                            model.employees[index].name, _employeeData[index]);
+                            model.employees[index].name, _employeeData[index] ?? '');
                   }
                 },
-                onAccept: (String data) {
+                onAcceptWithDetails: (DragTargetDetails<String> details) {
                   _allow = true;
-                  _acceptedData = data;
+                  _acceptedData = details.data;
                 },
               );
             },
@@ -110,18 +110,6 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
         ));
   }
 
-  // List<String> _weekdayShifts = [
-  //   '11.0 | 17.0',
-  //   '11.5 | 16.0',
-  //   '11.5 | 17.0',
-  //   '13.0 | 19.5',
-  //   '13.0 | 20.0',
-  //   '14.0 | 19.5',
-  //   '16.0 | 20.0',
-  //   '16.0 | 22.0',
-  //   '17.0 | 22.0',
-  //   '18.0 | 22.0',
-  // ];
   List<String> _weekdayShifts = [
     '9.0 | 17.0',
     '9.5 | 16.0',
@@ -231,7 +219,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                           ),
                         ),
                       )
-                    : FlatButton(
+                    : TextButton(
                         child: Text(
                           'Custom',
                           style: TextStyle(
@@ -279,7 +267,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: <Widget>[
-                                          FlatButton(
+                                          TextButton(
                                             onPressed: () {
                                               if (start.trim() != '' &&
                                                   end.trim() != '') {
@@ -339,32 +327,24 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
             style: TextStyle(fontSize: 9.0),
           ),
         ),
-        //color: isGrey ? Colors.white.withOpacity(0.9) : Colors.white,
         color: Colors.white.withOpacity(0.9));
   }
 
   void _buildSchedule(MainModel model) {
-    //bool isGrey = true;
     model.temporaryDate = model.savedDate.subtract(Duration(days: 1));
     int dayOfWeek = 0;
     int employeeIndex = 0;
     int testIndex = -1;
-    List<String> data = List((model.employees.length * 8) + 8);
+    List<String?> data = List.filled((model.employees.length * 8) + 8, null);
     model.setData(data);
-    //final List<Widget> scheduleList = List.generate(data.length, (index) {
-    //print(isGrey);
     for (var index = 0; index < data.length; index++) {
       if (index == 0) {
         data[0] = '';
-        //return container('', isGrey);
       } else if (index < 8) {
         data[index] = '${model.tempDate.day}';
-        //return container(data[index], isGrey);
       } else if (index % 8 == 0) {
         testIndex = testIndex + 1;
         data[index] = '${model.employees[employeeIndex++].name}';
-        //isGrey = !isGrey;
-        //return container(data[index], isGrey);
       } else {
         String shift = '';
 
@@ -377,12 +357,9 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
           dayOfWeek = 0;
         }
         data[index] = shift;
-
-        //return container(shift, isGrey);
       }
     }
 
-    //model.setWidgetSchedule(scheduleList);
     model.setData(data);
   }
 
@@ -395,18 +372,15 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
       appBar: AppBar(
         title: Text('Create Schedule'),
       ),
-      body: ScopedModelDescendant(
-          builder: (BuildContext context, Widget child, MainModel model) {
-        List<String> _employeeData = List(model.employees.length);
+      body: ScopedModelDescendant<MainModel>(
+          builder: (BuildContext context, Widget? child, MainModel model) {
+        List<String?> _employeeData = List.filled(model.employees.length, null);
         if (!model.rebuild) {
           model.setEmployeeData(_employeeData);
         }
 
         if (_selected[0]) {
-          List<Null> test = List(model.employees.length);
-          for (var i = 0; i < test.length; i++) {
-            test[i] = null;
-          }
+          List<dynamic> test = List.filled(model.employees.length, null);
           for (var i = 0; i < 8; i++) {
             model.schedule.add(test);
           }
@@ -418,8 +392,6 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
             image: DecorationImage(
               fit: BoxFit.cover,
               image: AssetImage('assets/background.png'),
-              // colorFilter: ColorFilter.mode(
-              //     Colors.black.withOpacity(0.9), BlendMode.dstATop),
             ),
           ),
           child: Column(children: <Widget>[
@@ -437,7 +409,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
             Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: <Widget>[
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text('Exit'),
                     onPressed: () {
                       model.rebuild = false;
@@ -446,7 +418,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                       Navigator.pushReplacementNamed(context, '/schedule');
                     },
                   ),
-                  RaisedButton(
+                  ElevatedButton(
                     child: Text('Reset'),
                     onPressed: () => setState(() {
                           model.rebuild = false;
@@ -454,7 +426,7 @@ class CreateSchedulePageState extends State<CreateSchedulePage> {
                   ),
                   model.isLoading
                       ? Center(child: CircularProgressIndicator())
-                      : RaisedButton(
+                      : ElevatedButton(
                           child: Text(model.countDay == 6 ? 'Confirm' : 'Next'),
                           onPressed: () {
                             model.rebuild = false;

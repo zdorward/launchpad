@@ -14,9 +14,9 @@ class _SelectDayPageState extends State<SelectDayPage> {
   DateTime _firstDate = DateTime.now().subtract(Duration( days: 7));
   DateTime _date = DateTime.now();
   DateTime limit = DateTime.now().add(Duration(days: 100));
- 
-  Future<Null> _selectDate(BuildContext context, MainModel model) async {
-    final DateTime picked = await showDatePicker(
+
+  Future<void> _selectDate(BuildContext context, MainModel model) async {
+    final DateTime? picked = await showDatePicker(
       context: context,
       firstDate: _firstDate,
       initialDate: _date,
@@ -40,7 +40,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
-        builder: (BuildContext context, Widget child, MainModel model) {
+        builder: (BuildContext context, Widget? child, MainModel model) {
       return Scaffold(
         appBar: AppBar(
           title: Text('Date Selection'),
@@ -51,11 +51,8 @@ class _SelectDayPageState extends State<SelectDayPage> {
             image: DecorationImage(
               fit: BoxFit.cover,
               image: AssetImage('assets/background.png'),
-              // colorFilter: ColorFilter.mode(
-              //     Colors.black.withOpacity(0.9), BlendMode.dstATop),
             ),
           ),
-          //margin: EdgeInsets.only(bottom: 100.0, top: 30.0),
           child: Column(
             children: <Widget>[
               Expanded(
@@ -64,7 +61,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Center(
-                      child: RaisedButton(
+                      child: ElevatedButton(
                         child: Text('Select Date'),
                         onPressed: () {
                           _selectDate(context, model);
@@ -92,7 +89,7 @@ class _SelectDayPageState extends State<SelectDayPage> {
               ),
               Container(
                 margin: EdgeInsets.only(bottom: 50.0),
-                child: RaisedButton(
+                child: ElevatedButton(
                   child: Text('Next'),
                   onPressed: () {
                     bool access = true;
@@ -117,12 +114,12 @@ class _SelectDayPageState extends State<SelectDayPage> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                               
+
                               title: Text('Error'),
                               content: Text(
                                   'A schedule with days during this week has already been made.'),
                               actions: <Widget>[
-                                FlatButton(
+                                TextButton(
                                   child: Text('OK'),
                                   onPressed: () => Navigator.pop(context),
                                 )

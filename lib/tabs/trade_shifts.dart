@@ -5,13 +5,13 @@ import '../scoped-models/main.dart';
 
 class TradeShiftsTab extends StatefulWidget {
   @override
-  _TradeShiftsTabState createState() => new _TradeShiftsTabState();
+  _TradeShiftsTabState createState() => _TradeShiftsTabState();
 }
 
 class _TradeShiftsTabState extends State<TradeShiftsTab> {
-  DateTime _firstDate;
-  DateTime _date;
-  DateTime limit;
+  late DateTime _firstDate;
+  late DateTime _date;
+  late DateTime limit;
 
   @override
   initState() {
@@ -21,8 +21,8 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
     super.initState();
   }
 
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
       context: context,
       firstDate: _firstDate,
       initialDate: _date,
@@ -35,7 +35,7 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
     }
   }
 
-  String _name;
+  String? _name;
 
   bool validate(MainModel model) {
     bool test1 = false;
@@ -43,7 +43,7 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
     if (_name == null || _name == model.user.name) {
       return false;
     }
-    if (model.allSchedules.length <= 0) {
+    if (model.allSchedules.isEmpty) {
       return false;
     }
 
@@ -75,8 +75,8 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
       padding:
           EdgeInsets.only(top: 10.0, right: 20.0, left: 20.0, bottom: 10.0),
       child: Center(
-        child: ScopedModelDescendant(
-            builder: (BuildContext context, Widget child, MainModel model) {
+        child: ScopedModelDescendant<MainModel>(
+            builder: (BuildContext context, Widget? child, MainModel model) {
           if (model.isLoading) {
             return Center(child: CircularProgressIndicator());
           } else {
@@ -90,13 +90,13 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
                         childAspectRatio: 3.0,
                         crossAxisCount: 2,
                         primary: false,
-                        children: List<RadioListTile>.generate(
+                        children: List<RadioListTile<String>>.generate(
                             model.employees.length, (int index) {
-                          return RadioListTile(
+                          return RadioListTile<String>(
                             title: Text(model.employees[index].name),
                             value: model.employees[index].name,
                             groupValue: _name,
-                            onChanged: (dynamic value) {
+                            onChanged: (String? value) {
                               setState(() {
                                 _name = value;
                               });
@@ -107,13 +107,13 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
-                    RaisedButton(
+                    ElevatedButton(
                       child: Text('Select Date'),
                       onPressed: () {
                         _selectDate(context);
                       },
                     ),
-                    RaisedButton(
+                    ElevatedButton(
                       child: Text('Confirm'),
                       onPressed: () {
                         if (validate(model)) {
@@ -125,13 +125,13 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
                                   content: Text(
                                       'Are you sure you want to trade shifts with $_name on ${model.days[_date.weekday]}, ${model.months[_date.month]} ${_date.day}?'),
                                   actions: <Widget>[
-                                    FlatButton(
+                                    TextButton(
                                       child: Text('NO'),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
                                     ),
-                                    FlatButton(
+                                    TextButton(
                                       child: Text('YES'),
                                       onPressed: () {
                                         Navigator.pop(context);
@@ -142,7 +142,7 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
                                             .then((bool success) {
                                           if (success) {
                                             model
-                                                .createRequest(_name, _date)
+                                                .createRequest(_name!, _date)
                                                 .then((bool success) {
                                               model.isLoading = false;
                                             });
@@ -158,7 +158,7 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
                                                     content: Text(
                                                         'An error occurred when switching shifts. Check your network connection and make sure you have selected valid data.'),
                                                     actions: <Widget>[
-                                                      FlatButton(
+                                                      TextButton(
                                                         onPressed: () {
                                                           Navigator.pop(
                                                               context);
@@ -184,7 +184,7 @@ class _TradeShiftsTabState extends State<TradeShiftsTab> {
                                   content: Text(
                                       'Make sure an employee and a valid date are selected'),
                                   actions: <Widget>[
-                                    FlatButton(
+                                    TextButton(
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },

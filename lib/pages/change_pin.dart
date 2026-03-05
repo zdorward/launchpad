@@ -7,7 +7,7 @@ import '../scoped-models/main.dart';
 
 class ChangePINPage extends StatefulWidget {
   @override
-  _ChangePINPageState createState() => new _ChangePINPageState();
+  _ChangePINPageState createState() => _ChangePINPageState();
 }
 
 class _ChangePINPageState extends State<ChangePINPage> {
@@ -30,21 +30,22 @@ class _ChangePINPageState extends State<ChangePINPage> {
         padding: EdgeInsets.only(top: 30.0, left: 10.0, right: 10.0),
         child: Form(
           key: _passFormKey,
-          child: ScopedModelDescendant(
-            builder: (BuildContext context, Widget child, MainModel model) {
+          child: ScopedModelDescendant<MainModel>(
+            builder: (BuildContext context, Widget? child, MainModel model) {
               return Column(
                 children: <Widget>[
                   TextFormField(
                     obscureText: true,
                     focusNode: _oldPassFocusNode,
-                    validator: (String value) {
+                    validator: (String? value) {
                       if (value != model.user.pin || value == '') {
                         return 'Incorrect PIN';
                       }
+                      return null;
                     },
                     keyboardType: TextInputType.number,
-                    onSaved: (String value) {
-                      oldPass = (value);
+                    onSaved: (String? value) {
+                      oldPass = value ?? '';
                     },
                     decoration: InputDecoration(
                       labelText: 'Old PIN',
@@ -55,7 +56,7 @@ class _ChangePINPageState extends State<ChangePINPage> {
                     focusNode: _confirmNewPassFocusNode,
                     keyboardType: TextInputType.number,
                     onChanged: (String value) {
-                      newPass1 = (value);
+                      newPass1 = value;
                     },
                     decoration: InputDecoration(
                       labelText: 'New PIN',
@@ -63,14 +64,15 @@ class _ChangePINPageState extends State<ChangePINPage> {
                   ),
                   TextFormField(
                     obscureText: true,
-                    validator: (String value) {
+                    validator: (String? value) {
                       if (value != newPass1 || value == '') {
                         return 'PINs do not match';
                       }
+                      return null;
                     },
                     keyboardType: TextInputType.number,
-                    onSaved: (String value) {
-                      newPass2 = (value);
+                    onSaved: (String? value) {
+                      newPass2 = value ?? '';
                     },
                     decoration: InputDecoration(
                       labelText: 'Confirm PIN',
@@ -82,7 +84,7 @@ class _ChangePINPageState extends State<ChangePINPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      FlatButton(
+                      TextButton(
                         onPressed: () {
                           SystemChannels.textInput
                               .invokeMethod('TextInput.hide');
@@ -90,11 +92,13 @@ class _ChangePINPageState extends State<ChangePINPage> {
                         },
                         child: Text('Cancel'),
                       ),
-                      FlatButton(
-                        textColor: Theme.of(context).accentColor,
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          foregroundColor: Theme.of(context).colorScheme.secondary,
+                        ),
                         onPressed: () {
-                          _passFormKey.currentState.save();
-                          if (!_passFormKey.currentState.validate()) {
+                          _passFormKey.currentState?.save();
+                          if (!(_passFormKey.currentState?.validate() ?? false)) {
                             return;
                           }
 

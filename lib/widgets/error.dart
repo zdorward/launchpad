@@ -8,7 +8,7 @@ class ShowErrorDialogue extends StatelessWidget {
       content:
           Text('Please contact a manager and let them know what went wrong'),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           onPressed: () => Navigator.pushReplacementNamed(context, '/'),
           child: Text('Okay'),
         )

@@ -21,10 +21,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   final _pinFocusNode = FocusNode();
   final _accessCodeFocusNode = FocusNode();
 
-  String name;
-  int id;
-  String pin;
-  String attemptedAccessCode;
+  String name = '';
+  int id = 0;
+  String pin = '';
+  String attemptedAccessCode = '';
   bool manager = false;
 
   String _employeeAccessCode = 'UvdX83u';
@@ -40,10 +40,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Radio(
+            Radio<String>(
               value: 'employee',
               groupValue: groupValue,
-              onChanged: (String value) {
+              onChanged: (String? value) {
                 manager = false;
                 setState(() {
                   groupValue = 'employee';
@@ -53,10 +53,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             SizedBox(
               width: 50.0,
             ),
-            Radio(
+            Radio<String>(
               value: 'manager',
               groupValue: groupValue,
-              onChanged: (String value) {
+              onChanged: (String? value) {
                 manager = true;
                 setState(() {
                   groupValue = 'manager';
@@ -96,9 +96,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   Widget nameTextField(MainModel model) {
     bool create = true;
     return TextFormField(
-      validator: (String value) {
+      validator: (String? value) {
         for (int i = 0; i < model.employees.length; i++) {
-          if (model.employees[i].name.toLowerCase() == value.toLowerCase()) {
+          if (model.employees[i].name.toLowerCase() == value?.toLowerCase()) {
             create = false;
             break;
           }
@@ -106,10 +106,11 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         if (!create) {
           return 'Name already in use';
         }
+        return null;
       },
       focusNode: _nameFocusNode,
-      onSaved: (String value) {
-        name = value.trim();
+      onSaved: (String? value) {
+        name = value?.trim() ?? '';
       },
       decoration: InputDecoration(
         labelText: 'First name',
@@ -122,9 +123,9 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   Widget idTextField(MainModel model) {
     bool create = true;
     return TextFormField(
-      validator: (String value) {
+      validator: (String? value) {
         for (int i = 0; i < model.employees.length; i++) {
-          if (model.employees[i].id == int.parse(value)) {
+          if (model.employees[i].id == int.tryParse(value ?? '')) {
             create = false;
             break;
           }
@@ -132,10 +133,11 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         if (!create) {
           return 'ID already in use';
         }
+        return null;
       },
       focusNode: _idFocusNode,
-      onSaved: (String value) {
-        id = int.parse(value);
+      onSaved: (String? value) {
+        id = int.tryParse(value ?? '') ?? 0;
       },
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
@@ -148,14 +150,15 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   Widget pinTextField() {
     return TextFormField(
-      validator: (String value) {
-        if (value.length != 4) {
+      validator: (String? value) {
+        if ((value?.length ?? 0) != 4) {
           return 'PIN must be 4 digits';
         }
+        return null;
       },
       focusNode: _pinFocusNode,
-      onSaved: (String value) {
-        pin = value;
+      onSaved: (String? value) {
+        pin = value ?? '';
       },
       obscureText: true,
       keyboardType: TextInputType.number,
@@ -169,16 +172,17 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   Widget accessCodeTextField() {
     return TextFormField(
-      validator: (String value) {
+      validator: (String? value) {
         if ((manager && attemptedAccessCode != _managerAccessCode) ||
             (!manager && attemptedAccessCode != _employeeAccessCode)) {
           return 'Invalid access code';
         }
+        return null;
       },
       obscureText: true,
       focusNode: _accessCodeFocusNode,
-      onSaved: (String value) {
-        attemptedAccessCode = value;
+      onSaved: (String? value) {
+        attemptedAccessCode = value ?? '';
       },
       decoration: InputDecoration(
         labelText: 'Access Code',
@@ -203,7 +207,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               child: Form(
                 key: _formKey,
                 child: ScopedModelDescendant<MainModel>(builder:
-                    (BuildContext context, Widget child, MainModel model) {
+                    (BuildContext context, Widget? child, MainModel model) {
                   return Column(
                     children: [
                       Container(
@@ -220,11 +224,13 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                       space(10.0),
                       accessCodeTextField(),
                       space(30.0),
-                      RaisedButton(
-                        color: Theme.of(context).accentColor,
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).colorScheme.secondary,
+                        ),
                         onPressed: () {
-                          _formKey.currentState.save();
-                          if (!_formKey.currentState.validate()) {
+                          _formKey.currentState?.save();
+                          if (!(_formKey.currentState?.validate() ?? false)) {
                             return;
                           }
                           _createAccount(model);

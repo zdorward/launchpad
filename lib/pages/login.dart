@@ -38,13 +38,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _idTextFormField(MainModel model) {
     return TextFormField(
-      validator: (String value) {
+      validator: (String? value) {
         for (int i = 0; i < model.employees.length; i++) {
-          if (value.isEmpty) {
+          if (value?.isEmpty ?? true) {
             return '';
           }
 
-          if (model.employees[i].id == int.parse(value)) {
+          if (model.employees[i].id == int.tryParse(value ?? '')) {
             index = i;
             login = true;
             break;
@@ -55,6 +55,7 @@ class _LoginPageState extends State<LoginPage> {
         if (!login) {
           return 'Invalid ID';
         }
+        return null;
       },
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
@@ -67,15 +68,16 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _pinTextFormField(MainModel model) {
     return TextFormField(
-      validator: (String value) {
-        if (value.isEmpty) {
+      validator: (String? value) {
+        if (value?.isEmpty ?? true) {
           return '';
         }
         if (index < 0) {
           return '';
-        } else if (model.employees[index].pin != (value)) {
+        } else if (model.employees[index].pin != value) {
           return 'Invalid PIN';
         }
+        return null;
       },
       keyboardType: TextInputType.number,
       obscureText: true,
@@ -88,9 +90,11 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _createAccountButton() {
-    return FlatButton(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
-      color: Colors.black.withOpacity(0.2),
+    return TextButton(
+      style: TextButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+        backgroundColor: Colors.black.withOpacity(0.2),
+      ),
       onPressed: () {
         Navigator.pushNamed(context, '/create_account');
       },
@@ -102,14 +106,15 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _loginButton(MainModel model) {
-    return RaisedButton(
-      color: Theme.of(context).primaryColor,
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
       child: Text('LOGIN'),
       onPressed: () {
-        if (!_formKey.currentState.validate()) {
+        if (!(_formKey.currentState?.validate() ?? false)) {
           return;
         }
-        //_formKey.currentState.save();
         model.setUserIndex(index);
         model.setUser(model.employees[index]);
         model.setWidth(MediaQuery.of(context).size.width);
@@ -122,8 +127,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget centeredColumn() {
     return Form(
         key: _formKey,
-        child: ScopedModelDescendant(
-          builder: (BuildContext context, Widget child, MainModel model) {
+        child: ScopedModelDescendant<MainModel>(
+          builder: (BuildContext context, Widget? child, MainModel model) {
             return Column(
               children: <Widget>[
                 _idTextFormField(model),

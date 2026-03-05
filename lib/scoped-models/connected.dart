@@ -20,8 +20,8 @@ mixin ConnectedModel on Model {
   bool rebuild = false;
   bool isLoading = false;
 
-  Employee _loggedInUser;
-  int _loggedInUserIndex;
+  late Employee _loggedInUser;
+  late int _loggedInUserIndex;
 }
 
 mixin UserModel on ConnectedModel {
@@ -35,7 +35,7 @@ mixin UserModel on ConnectedModel {
       'logged in': false
     };
     return http
-        .post('https://launchpad-9e294.firebaseio.com/employees.json',
+        .post(Uri.parse('https://launchpad-9e294.firebaseio.com/employees.json'),
             body: json.encode(employeeData))
         .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -46,7 +46,7 @@ mixin UserModel on ConnectedModel {
           id: id,
           pin: pin,
           manager: manager,
-          requests: null,
+          requests: [],
           loggedIn: false));
       notifyListeners();
       return true;
@@ -60,9 +60,9 @@ mixin UserModel on ConnectedModel {
   Future<bool> fetchEmployees() {
     notifyListeners();
     return http
-        .get('https://launchpad-9e294.firebaseio.com/employees.json')
+        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/employees.json'))
         .then((http.Response response) {
-      final Map<String, dynamic> employeeListData = json.decode(response.body);
+      final Map<String, dynamic>? employeeListData = json.decode(response.body);
       if (employeeListData == null) {
         _employees = [];
       } else {
@@ -75,8 +75,8 @@ mixin UserModel on ConnectedModel {
                 id: (employeeData['id']),
                 manager: employeeData['manager'],
                 pin: (employeeData['pin']),
-                requests: null,
-                loggedIn: employeeData['logged in']);
+                requests: [],
+                loggedIn: employeeData['logged in'] ?? false);
             fetchedEmployees.add(employee);
           } else {
             final Employee employee = Employee(
@@ -86,7 +86,7 @@ mixin UserModel on ConnectedModel {
                 manager: employeeData['manager'],
                 pin: (employeeData['pin']),
                 requests: employeeData['requests'],
-                loggedIn: employeeData['logged in']);
+                loggedIn: employeeData['logged in'] ?? false);
             fetchedEmployees.add(employee);
           }
         });
@@ -128,7 +128,7 @@ mixin UserModel on ConnectedModel {
     notifyListeners();
     return http
         .delete(
-            'https://launchpad-9e294.firebaseio.com/employees/$deletedEmployeeKey.json')
+            Uri.parse('https://launchpad-9e294.firebaseio.com/employees/$deletedEmployeeKey.json'))
         .then((http.Response respose) {
       _employees.removeAt(index);
       isLoading = false;
@@ -147,7 +147,7 @@ mixin UserModel on ConnectedModel {
     notifyListeners();
   }
 
-  List get employees {
+  List<Employee> get employees {
     return List.from(_employees);
   }
 
@@ -168,7 +168,7 @@ mixin UserModel on ConnectedModel {
     };
 
     http.put(
-        'https://launchpad-9e294.firebaseio.com/employees/${identifiedEmployee.key}.json',
+        Uri.parse('https://launchpad-9e294.firebaseio.com/employees/${identifiedEmployee.key}.json'),
         body: json.encode(employeeData));
 
     notifyListeners();
@@ -177,9 +177,9 @@ mixin UserModel on ConnectedModel {
   Future<bool> updateUser(int index) {
     isLoading = true;
     return http
-        .get('https://launchpad-9e294.firebaseio.com/employees.json')
+        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/employees.json'))
         .then((http.Response response) {
-      final Map<String, dynamic> employeeListData = json.decode(response.body);
+      final Map<String, dynamic>? employeeListData = json.decode(response.body);
       if (employeeListData == null) {
         _employees = [];
       } else {
@@ -192,8 +192,8 @@ mixin UserModel on ConnectedModel {
                 id: (employeeData['id']),
                 manager: employeeData['manager'],
                 pin: (employeeData['pin']),
-                requests: null,
-                loggedIn: employeeData['logged in']);
+                requests: [],
+                loggedIn: employeeData['logged in'] ?? false);
             fetchedEmployees.add(employee);
           } else {
             final Employee employee = Employee(
@@ -203,7 +203,7 @@ mixin UserModel on ConnectedModel {
                 manager: employeeData['manager'],
                 pin: (employeeData['pin']),
                 requests: employeeData['requests'],
-                loggedIn: employeeData['logged in']);
+                loggedIn: employeeData['logged in'] ?? false);
             fetchedEmployees.add(employee);
           }
         });
@@ -277,16 +277,16 @@ mixin ScheduleModel on ConnectedModel {
   };
 
   DateTime savedDate = DateTime.now();
-  DateTime temporaryDate;
+  late DateTime temporaryDate;
 
   List<Schedule> _schedules = [];
-  List<List<String>> _schedule = [];
+  List<List<dynamic>> _schedule = [];
   List<Widget> _widgetSchedule = [];
-  List<String> _data;
-  List<String> _employeeData;
+  late List<String?> _data;
+  late List<String?> _employeeData;
   List<Update> _shiftChangeHistory = [];
 
-  double _width;
+  late double _width;
 
   void setWidth(double width) {
     _width = width;
@@ -312,7 +312,7 @@ mixin ScheduleModel on ConnectedModel {
     countDay++;
   }
 
-  Widget container(String text, bool isGrey, double width) {
+  Widget container(String? text, bool isGrey, double width) {
     bool smaller = false;
     if (width < 330.0) {
       smaller = true;
@@ -320,7 +320,7 @@ mixin ScheduleModel on ConnectedModel {
     return Container(
       child: Center(
         child: Text(
-          text,
+          text ?? '',
           style: TextStyle(fontSize: smaller ? 7.5 : 9.0),
         ),
       ),
@@ -332,8 +332,8 @@ mixin ScheduleModel on ConnectedModel {
     String employeeName,
     DateTime date,
   ) {
-    Employee otherEmployee;
-    int index;
+    Employee? otherEmployee;
+    int? index;
 
     for (var i = 0; i < _employees.length; i++) {
       if (_employees[i].name == employeeName) {
@@ -346,22 +346,22 @@ mixin ScheduleModel on ConnectedModel {
       'name': _loggedInUser.name,
       'date': date.toIso8601String()
     };
-    if (_employees[index].requests == null) {
+    if (index != null && _employees[index].requests.isEmpty) {
       _employees[index].requests = [addRequest];
-    } else {
+    } else if (index != null) {
       _employees[index].requests.add(addRequest);
     }
 
     final Map<String, dynamic> employeeData = {
-      'name': otherEmployee.name,
-      'id': otherEmployee.id,
-      'pin': otherEmployee.pin,
-      'manager': otherEmployee.manager,
-      'requests': otherEmployee.requests
+      'name': otherEmployee?.name,
+      'id': otherEmployee?.id,
+      'pin': otherEmployee?.pin,
+      'manager': otherEmployee?.manager,
+      'requests': otherEmployee?.requests
     };
     return http
         .put(
-            'https://launchpad-9e294.firebaseio.com/employees/${otherEmployee.key}.json',
+            Uri.parse('https://launchpad-9e294.firebaseio.com/employees/${otherEmployee?.key}.json'),
             body: json.encode(employeeData))
         .then((http.Response response) {
       notifyListeners();
@@ -377,7 +377,7 @@ mixin ScheduleModel on ConnectedModel {
     isLoading = true;
     return http
         .delete(
-            'https://launchpad-9e294.firebaseio.com/employees/${_loggedInUser.key}/requests/$index.json')
+            Uri.parse('https://launchpad-9e294.firebaseio.com/employees/${_loggedInUser.key}/requests/$index.json'))
         .then((http.Response response) {
       _employees[_loggedInUserIndex].requests.removeAt(index);
       _loggedInUser = _employees[_loggedInUserIndex];
@@ -401,10 +401,10 @@ mixin ScheduleModel on ConnectedModel {
     int weekday = date.weekday;
     isLoading = true;
     notifyListeners();
-    Schedule identifiedSchedule;
-    int scheduleIndex;
-    int otherEmployeeIndex;
-    int loggedInUserIndex;
+    Schedule? identifiedSchedule;
+    int? scheduleIndex;
+    int? otherEmployeeIndex;
+    int? loggedInUserIndex;
 
     Map<String, dynamic> updatedSchedule;
 
@@ -418,6 +418,10 @@ mixin ScheduleModel on ConnectedModel {
       }
     }
 
+    if (identifiedSchedule == null || scheduleIndex == null) {
+      return Future.value(false);
+    }
+
     for (var i = 0; i < identifiedSchedule.employeeNames.length; i++) {
       if (employeeName == identifiedSchedule.employeeNames[i]) {
         otherEmployeeIndex = i;
@@ -427,7 +431,11 @@ mixin ScheduleModel on ConnectedModel {
       }
     }
 
-    String temp;
+    if (otherEmployeeIndex == null || loggedInUserIndex == null) {
+      return Future.value(false);
+    }
+
+    dynamic temp;
 
     temp = identifiedSchedule.data[otherEmployeeIndex * 8 + weekday + 8];
     identifiedSchedule.data[otherEmployeeIndex * 8 + weekday + 8] =
@@ -441,7 +449,7 @@ mixin ScheduleModel on ConnectedModel {
         isGrey = !isGrey;
       }
 
-      return container(identifiedSchedule.data[index], isGrey, _width);
+      return container(identifiedSchedule!.data[index]?.toString(), isGrey, _width);
     });
     _schedules[scheduleIndex].widget = scheduleList;
 
@@ -455,7 +463,7 @@ mixin ScheduleModel on ConnectedModel {
         'https://launchpad-9e294.firebaseio.com/schedules/${identifiedSchedule.key}.json';
 
     return http
-        .put(url, body: json.encode(updatedSchedule))
+        .put(Uri.parse(url), body: json.encode(updatedSchedule))
         .then((http.Response response) {
       notifyListeners();
       return true;
@@ -488,7 +496,7 @@ mixin ScheduleModel on ConnectedModel {
     };
 
     return http
-        .post('https://launchpad-9e294.firebaseio.com/updates.json',
+        .post(Uri.parse('https://launchpad-9e294.firebaseio.com/updates.json'),
             body: json.encode(employeeData))
         .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -502,7 +510,7 @@ mixin ScheduleModel on ConnectedModel {
       if (_shiftChangeHistory.length > 50) {
         String identifiedUpdateKey = _shiftChangeHistory[0].key;
         http.delete(
-            'https://launchpad-9e294.firebaseio.com/updates/$identifiedUpdateKey.json');
+            Uri.parse('https://launchpad-9e294.firebaseio.com/updates/$identifiedUpdateKey.json'));
         _shiftChangeHistory = _shiftChangeHistory.sublist(1);
       }
       notifyListeners();
@@ -524,7 +532,7 @@ mixin ScheduleModel on ConnectedModel {
       'seen': true,
     };
     http.put(
-        'https://launchpad-9e294.firebaseio.com/updates/${identifiedUpdate.key}.json',
+        Uri.parse('https://launchpad-9e294.firebaseio.com/updates/${identifiedUpdate.key}.json'),
         body: json.encode(updatedUpdate));
     _shiftChangeHistory[index].seen = true;
     notifyListeners();
@@ -533,9 +541,9 @@ mixin ScheduleModel on ConnectedModel {
   Future<bool> fetchUpdates() {
     isLoading = true;
     return http
-        .get('https://launchpad-9e294.firebaseio.com/updates.json')
+        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/updates.json'))
         .then((http.Response response) {
-      final Map<String, dynamic> updateListData = json.decode(response.body);
+      final Map<String, dynamic>? updateListData = json.decode(response.body);
       if (updateListData == null) {
         _shiftChangeHistory = [];
       } else {
@@ -563,7 +571,7 @@ mixin ScheduleModel on ConnectedModel {
     });
   }
 
-  List get shiftChangeHistory {
+  List<Update> get shiftChangeHistory {
     return _shiftChangeHistory;
   }
 
@@ -571,23 +579,23 @@ mixin ScheduleModel on ConnectedModel {
     _schedule = [];
   }
 
-  List get schedule {
+  List<List<dynamic>> get schedule {
     return (_schedule);
   }
 
-  List get widgetSchedule {
+  List<Widget> get widgetSchedule {
     return _widgetSchedule;
   }
 
-  List get data {
+  List<String?> get data {
     return _data;
   }
 
-  List get allSchedules {
+  List<Schedule> get allSchedules {
     return _schedules;
   }
 
-  List get employeeData {
+  List<String?> get employeeData {
     return _employeeData;
   }
 
@@ -607,7 +615,7 @@ mixin ScheduleModel on ConnectedModel {
     };
     try {
       final http.Response response = await http.post(
-          'https://launchpad-9e294.firebaseio.com/schedules.json',
+          Uri.parse('https://launchpad-9e294.firebaseio.com/schedules.json'),
           body: json.encode(scheduleData));
 
       if (response.statusCode != 200 && response.statusCode != 201) {
@@ -641,11 +649,11 @@ mixin ScheduleModel on ConnectedModel {
     isLoading = true;
     notifyListeners();
     return http
-        .get('https://launchpad-9e294.firebaseio.com/schedules.json')
+        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/schedules.json'))
         .then((http.Response response) {
       isLoading = false;
       notifyListeners();
-      final Map<String, dynamic> scheduleListData = json.decode(response.body);
+      final Map<String, dynamic>? scheduleListData = json.decode(response.body);
       if (scheduleListData == null) {
         _schedules = [];
       } else {
@@ -662,7 +670,7 @@ mixin ScheduleModel on ConnectedModel {
             if (index % 8 == 0) {
               isGrey = !isGrey;
             }
-            return container(scheduleData['data'][index], isGrey, _width);
+            return container(scheduleData['data'][index]?.toString(), isGrey, _width);
           });
           final Schedule schedule = Schedule(
               key: key,
@@ -691,7 +699,7 @@ mixin ScheduleModel on ConnectedModel {
     notifyListeners();
     return http
         .delete(
-            'https://launchpad-9e294.firebaseio.com/schedules/$deletedScheduleID.json')
+            Uri.parse('https://launchpad-9e294.firebaseio.com/schedules/$deletedScheduleID.json'))
         .then((http.Response respose) {
       allSchedules.removeAt(index);
       isLoading = false;
@@ -714,17 +722,17 @@ mixin ScheduleModel on ConnectedModel {
     _widgetSchedule = schedule;
   }
 
-  void setData(List<String> data) {
+  void setData(List<String?> data) {
     _data = data;
   }
 
-  void setEmployeeData(List<String> data) {
+  void setEmployeeData(List<String?> data) {
     _employeeData = data;
   }
 
   String findShift(String name, DateTime date) {
-    Schedule identifiedSchedule;
-    int employeeIndex;
+    Schedule? identifiedSchedule;
+    int? employeeIndex;
     String shift;
 
     for (var i = 0; i < _schedules.length; i++) {
@@ -744,7 +752,11 @@ mixin ScheduleModel on ConnectedModel {
       }
     }
 
-    shift = identifiedSchedule.data[employeeIndex * 8 + date.weekday + 8];
+    if (employeeIndex == null) {
+      return '';
+    }
+
+    shift = identifiedSchedule.data[employeeIndex * 8 + date.weekday + 8]?.toString() ?? '';
     return shift;
   }
 }
@@ -752,7 +764,7 @@ mixin ScheduleModel on ConnectedModel {
 mixin PromotionsModel on ConnectedModel {
   List<Promotion> _promotions = [];
 
-  List get promotions {
+  List<Promotion> get promotions {
     return _promotions;
   }
 
@@ -763,7 +775,7 @@ mixin PromotionsModel on ConnectedModel {
       'description': description,
     };
     return http
-        .post('https://launchpad-9e294.firebaseio.com/promotions.json',
+        .post(Uri.parse('https://launchpad-9e294.firebaseio.com/promotions.json'),
             body: json.encode(promotionData))
         .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -782,9 +794,9 @@ mixin PromotionsModel on ConnectedModel {
   Future<bool> fetchPromotions() {
     isLoading = true;
     return http
-        .get('https://launchpad-9e294.firebaseio.com/promotions.json')
+        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/promotions.json'))
         .then((http.Response response) {
-      final Map<String, dynamic> promotionListData = json.decode(response.body);
+      final Map<String, dynamic>? promotionListData = json.decode(response.body);
       if (promotionListData == null) {
         _promotions = [];
       } else {
@@ -825,7 +837,7 @@ mixin PromotionsModel on ConnectedModel {
 
     return http
         .delete(
-            'https://launchpad-9e294.firebaseio.com/promotions/$deletedPromotionKey.json')
+            Uri.parse('https://launchpad-9e294.firebaseio.com/promotions/$deletedPromotionKey.json'))
         .then((http.Response respose) {
       _promotions.removeAt(index);
       isLoading = false;
@@ -842,7 +854,7 @@ mixin PromotionsModel on ConnectedModel {
 mixin ShiftModel on ConnectedModel {
   List<Shift> _shiftPool = [];
 
-  List get shiftPool {
+  List<Shift> get shiftPool {
     return _shiftPool;
   }
 
@@ -854,7 +866,7 @@ mixin ShiftModel on ConnectedModel {
       'shift': shift
     };
     return http
-        .post('https://launchpad-9e294.firebaseio.com/shifts.json',
+        .post(Uri.parse('https://launchpad-9e294.firebaseio.com/shifts.json'),
             body: json.encode(shiftData))
         .then((http.Response response) {
       final Map<String, dynamic> responseData = json.decode(response.body);
@@ -879,9 +891,9 @@ mixin ShiftModel on ConnectedModel {
     isLoading = true;
     notifyListeners();
     return http
-        .get('https://launchpad-9e294.firebaseio.com/shifts.json')
+        .get(Uri.parse('https://launchpad-9e294.firebaseio.com/shifts.json'))
         .then((http.Response response) {
-      final Map<String, dynamic> shiftListData = json.decode(response.body);
+      final Map<String, dynamic>? shiftListData = json.decode(response.body);
       if (shiftListData == null) {
         _shiftPool = [];
       } else {
@@ -919,7 +931,7 @@ mixin ShiftModel on ConnectedModel {
 
     return http
         .delete(
-            'https://launchpad-9e294.firebaseio.com/shifts/$deletedShiftKey.json')
+            Uri.parse('https://launchpad-9e294.firebaseio.com/shifts/$deletedShiftKey.json'))
         .then((http.Response respose) {
       _shiftPool.removeAt(index);
       isLoading = false;
@@ -939,7 +951,6 @@ mixin ListTileModel on ConnectedModel {
         AppBar(
           title: Text('Menu'),
         ),
-        //AnnouncementsPageListTile(),
         ScheduleListTile(),
         RequestShiftChangeListTile(),
         ShiftPoolListTile(),
@@ -953,7 +964,6 @@ mixin ListTileModel on ConnectedModel {
         AppBar(
           title: Text('Menu'),
         ),
-        //AnnouncementsPageListTile(),
         ScheduleListTile(),
         RequestShiftChangeListTile(),
         ShiftPoolListTile(),

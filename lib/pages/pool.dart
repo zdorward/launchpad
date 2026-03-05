@@ -11,13 +11,13 @@ class ShiftPoolPage extends StatefulWidget {
   final MainModel model;
   ShiftPoolPage(this.model);
   @override
-  _ShiftPoolPageState createState() => new _ShiftPoolPageState();
+  _ShiftPoolPageState createState() => _ShiftPoolPageState();
 }
 
 class _ShiftPoolPageState extends State<ShiftPoolPage> {
-  DateTime _firstDate;
-  DateTime _date;
-  DateTime limit;
+  late DateTime _firstDate;
+  late DateTime _date;
+  late DateTime limit;
 
   @override
   initState() {
@@ -47,13 +47,13 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
             content: Text(
                 'Are you sure you want to remove your shift on ${model.months[date.month]} ${date.day} from the shift pool?'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('NO'),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
-              FlatButton(
+              TextButton(
                 child: Text('YES'),
                 onPressed: () {
                   model.isLoading = true;
@@ -77,13 +77,13 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
             content: Text(
                 'Are you sure you want to take $name\'s shift on ${model.months[date.month]} ${date.day}?'),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                 child: Text('NO'),
                 onPressed: () {
                   Navigator.pop(context);
                 },
               ),
-              FlatButton(
+              TextButton(
                 child: Text('YES'),
                 onPressed: () {
                   model.isLoading = true;
@@ -119,7 +119,6 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
               ),
               title: Text(
                   '${model.days[date.weekday]}, ${model.months[date.month]} ${date.day}, ${date.year}'),
-              //COME BACK HERE!!!
               subtitle: Text(shift),
               trailing: name == model.user.name
                   ? (Icon(
@@ -152,8 +151,8 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
     );
   }
 
-  Future<Null> _selectDate(BuildContext context, MainModel model) async {
-    final DateTime picked = await showDatePicker(
+  Future<void> _selectDate(BuildContext context, MainModel model) async {
+    final DateTime? picked = await showDatePicker(
       context: context,
       firstDate: _firstDate,
       initialDate: _date,
@@ -172,13 +171,13 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
                 content: Text(
                     'Are you sure you want to add your shift on ${model.months[_date.month]} ${_date.day} to the shift pool?'),
                 actions: <Widget>[
-                  FlatButton(
+                  TextButton(
                     child: Text('NO'),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  FlatButton(
+                  TextButton(
                     child: Text('YES'),
                     onPressed: () {
                       String shift = model.findShift(model.user.name, picked);
@@ -196,7 +195,7 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
                                 content: Text(
                                     'You do not work on the day you selected'),
                                 actions: <Widget>[
-                                  FlatButton(
+                                  TextButton(
                                     child: Text('OK'),
                                     onPressed: () => Navigator.pop(context),
                                   )
@@ -214,14 +213,14 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
   }
 
   void createShift(BuildContext context, MainModel model) {
-    
+
 
   }
 
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
-      builder: (BuildContext context, Widget child, MainModel model) {
+      builder: (BuildContext context, Widget? child, MainModel model) {
         List<Shift> newShifts = [];
         String shift;
         for (int i = 0; i < model.shiftPool.length; i++) {
@@ -236,7 +235,7 @@ class _ShiftPoolPageState extends State<ShiftPoolPage> {
             child: Text('There are currently no shifts available to pick up'));
         if (model.isLoading) {
           content = Center(child: CircularProgressIndicator());
-        } else if (newShifts != null && newShifts.length > 0) {
+        } else if (newShifts.isNotEmpty) {
           content = listShifts(model, newShifts);
         }
         return Scaffold(

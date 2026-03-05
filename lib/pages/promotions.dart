@@ -10,7 +10,7 @@ class PromotionsPage extends StatefulWidget {
   final MainModel model;
   PromotionsPage(this.model);
   @override
-  _PromotionsPageState createState() => new _PromotionsPageState();
+  _PromotionsPageState createState() => _PromotionsPageState();
 }
 
 class _PromotionsPageState extends State<PromotionsPage> {
@@ -28,7 +28,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
     super.initState();
   }
 
-  Promotion promotion;
+  late Promotion promotion;
 
 
   Widget listPromotions(MainModel model) {
@@ -50,7 +50,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                           promotion.name +
                           '?'),
                       actions: <Widget>[
-                        FlatButton(
+                        TextButton(
                           child: Text('NO'),
                           onPressed: () {
                             model.reinsertPromotion(
@@ -59,7 +59,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                             Navigator.pop(context);
                           },
                         ),
-                        FlatButton(
+                        TextButton(
                           child: Text('YES'),
                           onPressed: () {
                             Navigator.pop(context);
@@ -93,7 +93,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                       title: Text('Error'),
                       content: Text('You do not have access to this function'),
                       actions: <Widget>[
-                        FlatButton(
+                        TextButton(
                           child: Text('OK'),
                           onPressed: () => Navigator.pop(context),
                         )
@@ -111,7 +111,6 @@ class _PromotionsPageState extends State<PromotionsPage> {
                   color: Theme.of(context).primaryColor,
                 ),
                 title: Text(promotion.name),
-                //subtitle: Text('${promotion.discount.toString()}%'),
                 trailing: IconButton(
                   onPressed: () {
                     showDialog(
@@ -123,7 +122,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                                 .promotions[model.promotions.length - index - 1]
                                 .description),
                             actions: <Widget>[
-                              FlatButton(
+                              TextButton(
                                 child: Text('OK'),
                                 onPressed: () => Navigator.pop(context),
                               )
@@ -148,7 +147,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
-        builder: (BuildContext context, Widget child, MainModel model) {
+        builder: (BuildContext context, Widget? child, MainModel model) {
       Widget content = Center(child: Text('No promotions found'));
       if (model.isLoading) {
         content = Center(child: CircularProgressIndicator());
@@ -185,17 +184,6 @@ class _PromotionsPageState extends State<PromotionsPage> {
                               ),
                             ),
                           ),
-                          // SimpleDialogOption(
-                          //   child: TextField(
-                          //     keyboardType: TextInputType.number,
-                          //     onChanged: (String value) {
-                          //       discount = int.parse(value);
-                          //     },
-                          //     decoration: InputDecoration(
-                          //       labelText: 'Discount Type',
-                          //     ),
-                          //   ),
-                          // ),
                           SimpleDialogOption(
                             child: TextField(
                               maxLines: 3,
@@ -211,7 +199,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: <Widget>[
-                                FlatButton(
+                                TextButton(
                                   onPressed: () {
                                     if (name != '' &&
                                         description != '') {
@@ -237,7 +225,7 @@ class _PromotionsPageState extends State<PromotionsPage> {
                         content:
                             Text('You do not have access to this function'),
                         actions: <Widget>[
-                          FlatButton(
+                          TextButton(
                             child: Text('OK'),
                             onPressed: () => Navigator.pop(context),
                           )

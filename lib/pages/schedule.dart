@@ -30,7 +30,7 @@ class _SchedulePageState extends State<SchedulePage> {
 
   Widget _buildDrawer() {
     return ScopedModelDescendant<MainModel>(
-        builder: (BuildContext context, Widget child, MainModel model) {
+        builder: (BuildContext context, Widget? child, MainModel model) {
       return Drawer(
         child: Column(children: model.listTiles),
       );
@@ -39,7 +39,7 @@ class _SchedulePageState extends State<SchedulePage> {
 
   Widget _buildSchedule() {
     return ScopedModelDescendant<MainModel>(
-        builder: (BuildContext context, Widget child, MainModel model) {
+        builder: (BuildContext context, Widget? child, MainModel model) {
       Widget content = Center(child: Text('No available schedule'));
       if (model.allSchedules.isNotEmpty) {
         content = Container(
@@ -47,8 +47,6 @@ class _SchedulePageState extends State<SchedulePage> {
             image: DecorationImage(
               fit: BoxFit.cover,
               image: AssetImage('assets/background.png'),
-              // colorFilter: ColorFilter.mode(
-              //     Colors.black.withOpacity(0.9), BlendMode.dstATop),
             ),
           ),
           child: PageView.builder(
@@ -66,7 +64,7 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
         );
       } else if (model.isLoading) {
-        
+
         content = Container(
           decoration: BoxDecoration(
             image: DecorationImage(

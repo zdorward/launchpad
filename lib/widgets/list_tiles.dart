@@ -50,8 +50,8 @@ class ScheduleListTile extends StatelessWidget {
 class ManagerConsoleListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant(
-      builder: (BuildContext context, Widget child, MainModel model) {
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget? child, MainModel model) {
         return ListTile(
           leading: Icon(Icons.offline_bolt),
           title: Text('Manager Console'),
@@ -67,14 +67,14 @@ class ManagerConsoleListTile extends StatelessWidget {
 class PromotionsListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant(
-      builder: (BuildContext context, Widget child, MainModel model) {
+    return ScopedModelDescendant<MainModel>(
+      builder: (BuildContext context, Widget? child, MainModel model) {
         return ListTile(
           leading: Icon(Icons.label_important),
           title: Text('Promotions'),
           onTap: () {
             Navigator.pushReplacementNamed(context, '/promotions');
-            
+
           },
         );
       },

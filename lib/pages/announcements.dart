@@ -16,8 +16,8 @@ class AnnouncementsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Announcements'),
       ),
-      drawer: ScopedModelDescendant(
-        builder: (BuildContext context, Widget child, MainModel model) {
+      drawer: ScopedModelDescendant<MainModel>(
+        builder: (BuildContext context, Widget? child, MainModel model) {
           return _buildDrawer(context, model);
         },
       ),

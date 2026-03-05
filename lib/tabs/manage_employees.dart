@@ -8,11 +8,11 @@ import '../widgets/error.dart';
 
 class ManageEmployeesTab extends StatefulWidget {
   @override
-  _ManageEmployeesTabState createState() => new _ManageEmployeesTabState();
+  _ManageEmployeesTabState createState() => _ManageEmployeesTabState();
 }
 
 class _ManageEmployeesTabState extends State<ManageEmployeesTab> {
-  Employee employee;
+  late Employee employee;
 
   Widget listEmployees(MainModel model) {
     return ListView.builder(
@@ -31,7 +31,7 @@ class _ManageEmployeesTabState extends State<ManageEmployeesTab> {
                         employee.name +
                         '?'),
                     actions: <Widget>[
-                      FlatButton(
+                      TextButton(
                         child: Text('NO'),
                         onPressed: () {
                           setState(() {
@@ -41,7 +41,7 @@ class _ManageEmployeesTabState extends State<ManageEmployeesTab> {
                           Navigator.pop(context);
                         },
                       ),
-                      FlatButton(
+                      TextButton(
                         child: Text('YES'),
                         onPressed: () {
                           Navigator.pop(context);
@@ -69,12 +69,12 @@ class _ManageEmployeesTabState extends State<ManageEmployeesTab> {
             children: <Widget>[
               ListTile(
                 leading: CircleAvatar(
-                  
+
                   child: Text(model.employees[index].name.substring(0, 1)),
                 ),
                 title: Text(model.employees[index].name),
                 subtitle: Text(model.employees[index].id.toString()),
-                
+
               ),
               Divider(),
             ],
@@ -88,11 +88,11 @@ class _ManageEmployeesTabState extends State<ManageEmployeesTab> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
-      builder: (BuildContext context, Widget child, MainModel model) {
+      builder: (BuildContext context, Widget? child, MainModel model) {
         Widget content = Center(child: Text('No employees found'));
         if (model.isLoading) {
           content = Center(child: CircularProgressIndicator());
-        } else if (model.employees != null && model.employees.length > 0) {
+        } else if (model.employees.isNotEmpty) {
           content = listEmployees(model);
         }
         return RefreshIndicator(

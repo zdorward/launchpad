@@ -49,8 +49,10 @@ class AfterSplash extends StatelessWidget {
         theme: ThemeData(
             brightness: Brightness.light,
             primarySwatch: Colors.blue,
-            accentColor: Colors.orange,
-            buttonColor: Colors.orange),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.blue,
+              secondary: Colors.orange,
+            )),
         routes: {
           '/': (BuildContext context) => LoginPage(model),
           '/announcements': (BuildContext context) => AnnouncementsPage(),

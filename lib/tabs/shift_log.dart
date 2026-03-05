@@ -93,14 +93,12 @@ class _ShiftLogTabState extends State<ShiftLogTab> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
-        builder: (BuildContext context, Widget child, MainModel model) {
-      
+        builder: (BuildContext context, Widget? child, MainModel model) {
 
       Widget content = Center(child: Text('No updates found'));
       if (model.isLoading) {
         content = Center(child: CircularProgressIndicator());
-      } else if (model.shiftChangeHistory != null &&
-          model.shiftChangeHistory.length > 0) {
+      } else if (model.shiftChangeHistory.isNotEmpty) {
         content = listUpdates(model);
       }
       return RefreshIndicator(onRefresh: model.fetchUpdates, child: content);

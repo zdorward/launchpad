@@ -52,14 +52,14 @@ class _ManagerConsoleState extends State<ManagerConsole> {
           },
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.calendar_today), title: Text('Schedules')),
+                icon: Icon(Icons.calendar_today), label: 'Schedules'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.people), title: Text('Employees')),
+                icon: Icon(Icons.people), label: 'Employees'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.update), title: Text('Recent Updates')),
+                icon: Icon(Icons.update), label: 'Recent Updates'),
           ]),
-      drawer: ScopedModelDescendant(
-        builder: (BuildContext context, Widget child, MainModel model) {
+      drawer: ScopedModelDescendant<MainModel>(
+        builder: (BuildContext context, Widget? child, MainModel model) {
           return _buildDrawer(context, model);
         },
       ),

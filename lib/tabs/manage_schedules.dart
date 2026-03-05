@@ -26,7 +26,7 @@ class _ManageSchedulesTabState extends State<ManageSchedulesTab> {
     'November',
     'December',
   ];
-  Schedule schedule;
+  late Schedule schedule;
 
   Widget listSchedules(MainModel model) {
     return ListView.builder(
@@ -46,7 +46,7 @@ class _ManageSchedulesTabState extends State<ManageSchedulesTab> {
                     content:
                         Text('Are you sure you want to delete this schedule?'),
                     actions: <Widget>[
-                      FlatButton(
+                      TextButton(
                         child: Text('NO'),
                         onPressed: () {
                           setState(() {
@@ -56,7 +56,7 @@ class _ManageSchedulesTabState extends State<ManageSchedulesTab> {
                           Navigator.pop(context);
                         },
                       ),
-                      FlatButton(
+                      TextButton(
                         child: Text('YES'),
                         onPressed: () {
                           Navigator.pop(context);
@@ -87,12 +87,6 @@ class _ManageSchedulesTabState extends State<ManageSchedulesTab> {
                     '${months[first.month - 1]} ${first.day} - ${months[last.month - 1]} ${last.day}'),
                 subtitle: Text(
                     '${first.month}/${first.day}/${first.year} - ${last.month}/${last.day}/${last.year}'),
-                // trailing: IconButton(
-                //   onPressed: () {},
-                //   icon: Icon(
-                //     Icons.info,
-                //   ),
-                // ),
               ),
               Divider()
             ],
@@ -106,12 +100,11 @@ class _ManageSchedulesTabState extends State<ManageSchedulesTab> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<MainModel>(
-      builder: (BuildContext context, Widget child, MainModel model) {
+      builder: (BuildContext context, Widget? child, MainModel model) {
         Widget content = Center(child: Text('No schedules found'));
         if (model.isLoading) {
           content = Center(child: CircularProgressIndicator());
-        } else if (model.allSchedules != null &&
-            model.allSchedules.length > 0) {
+        } else if (model.allSchedules.isNotEmpty) {
           content = listSchedules(model);
         }
         return RefreshIndicator(
